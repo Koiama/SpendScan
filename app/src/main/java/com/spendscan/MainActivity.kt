@@ -1,0 +1,120 @@
+package com.spendscan
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.spendscan.ui.theme.SpendScanTheme
+
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            SpendScanTheme {
+                SpendScanApp()
+            }
+        }
+    }
+}
+
+data class BottomNavItem(
+    val route: String,
+    val icon: ImageVector,
+    val label: String
+)
+
+
+@Composable
+fun SpendScanApp() {
+
+    val bottomNavItems = listOf(
+        BottomNavItem(
+            route = "account",
+            icon = ImageVector.vectorResource(id = R.drawable.account_icon),
+            label = "Account"
+        ), BottomNavItem(
+            route = "article",
+            icon = ImageVector.vectorResource(id = R.drawable.articles_icon),
+            label = "Article"
+        ), BottomNavItem(
+            route = "incomes",
+            icon = ImageVector.vectorResource(id = R.drawable.incomes_icon),
+            label = "Incomes"
+        ), BottomNavItem(
+            route = "expenses",
+            icon = ImageVector.vectorResource(id = R.drawable.expenses_icon),
+            label = "Expenses"
+        ), BottomNavItem(
+            route = "settings",
+            icon = ImageVector.vectorResource(id = R.drawable.setting_icon),
+            label = "Settings"
+        )
+    )
+
+    val navController = rememberNavController()
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            NavigationBar {
+                bottomNavItems.forEach { item ->
+                    NavigationBarItem(
+                        icon = { Icon(item.icon, contentDescription = item.label) },
+                        label = { Text(item.label) },
+                        selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
+                        onClick = {
+                            navController.navigate(item.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
+            }
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController,
+            startDestination = "account",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("account") { AccountScreen() }
+            composable("article") { ArticleScreen() }
+            composable("incomes") { IncomesScreen() }
+            composable("expenses") { ExpensesScreen() }
+            composable("settings") { SettingScreen() }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ArticleScreenPreview() {
+    ArticleScreen()
+}
