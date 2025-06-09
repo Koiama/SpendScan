@@ -49,25 +49,25 @@ fun SpendScanApp() {
 
     val bottomNavItems = listOf(
         BottomNavItem(
-            route = "account",
-            icon = ImageVector.vectorResource(id = R.drawable.account_icon),
-            label = "Account"
-        ), BottomNavItem(
-            route = "article",
-            icon = ImageVector.vectorResource(id = R.drawable.articles_icon),
-            label = "Article"
+            route = "expenses",
+            icon = ImageVector.vectorResource(id = R.drawable.expenses_icon),
+            label = "Расходы"
         ), BottomNavItem(
             route = "incomes",
             icon = ImageVector.vectorResource(id = R.drawable.incomes_icon),
-            label = "Incomes"
+            label = "Доходы"
         ), BottomNavItem(
-            route = "expenses",
-            icon = ImageVector.vectorResource(id = R.drawable.expenses_icon),
-            label = "Expenses"
+            route = "account",
+            icon = ImageVector.vectorResource(id = R.drawable.account_icon),
+            label = "Счет"
         ), BottomNavItem(
+            route = "article",
+            icon = ImageVector.vectorResource(id = R.drawable.articles_icon),
+            label = "Статьи"
+        ),  BottomNavItem(
             route = "settings",
             icon = ImageVector.vectorResource(id = R.drawable.setting_icon),
-            label = "Settings"
+            label = "Настройки"
         )
     )
 
