@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -91,15 +93,18 @@ fun SpendScanApp() {
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.height(80.dp)
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 bottomNavItems.forEach { item ->
                     val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
-                    NavigationBarItem( modifier = Modifier.fillMaxWidth(), //Я не смогла расширить щирину текста, ЧЕРТОВ КОНТЕЙНЕР !!!!!
+                    NavigationBarItem(
                         icon = { Icon(item.icon, contentDescription = item.label) },
                         label = { Text(item.label,
-                            lineHeight = 16.sp,
                             maxLines = 1,
+                            lineHeight = 16.sp,
+                            letterSpacing = 0.5.sp,
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = 12.sp,
                             fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium
                         )},
                         selected = selected,
@@ -115,7 +120,8 @@ fun SpendScanApp() {
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = MaterialTheme.colorScheme.primary,
                             indicatorColor = MaterialTheme.colorScheme.onSecondary
-                        )
+                        ),
+                        modifier = Modifier.height(80.dp)
                     )
                 }
             }
