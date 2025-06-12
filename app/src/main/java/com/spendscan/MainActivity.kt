@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,13 +20,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.view.WindowCompat
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.spendscan.screens.AccountScreen
+import com.spendscan.screens.ArticleScreen
+import com.spendscan.screens.ExpensesScreen
+import com.spendscan.screens.IncomesScreen
+import com.spendscan.screens.SettingScreen
 import com.spendscan.ui.theme.SpendScanTheme
 
 
@@ -49,7 +58,6 @@ data class BottomNavItem(
 
 @Composable
 fun SpendScanApp() {
-
     val bottomNavItems = listOf(
         BottomNavItem(
             route = "expenses",
@@ -82,12 +90,19 @@ fun SpendScanApp() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                modifier = Modifier.height(80.dp)
+            ) {
                 bottomNavItems.forEach { item ->
-                    NavigationBarItem(
+                    val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
+                    NavigationBarItem( modifier = Modifier.fillMaxWidth(), //Я не смогла расширить щирину текста, ЧЕРТОВ КОНТЕЙНЕР !!!!!
                         icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) },
-                        selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
+                        label = { Text(item.label,
+                            lineHeight = 16.sp,
+                            maxLines = 1,
+                            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium
+                        )},
+                        selected = selected,
                         onClick = {
                             navController.navigate(item.route) {
                                 popUpTo(navController.graph.startDestinationId) {
@@ -99,7 +114,7 @@ fun SpendScanApp() {
                         },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.onTertiary
+                            indicatorColor = MaterialTheme.colorScheme.onSecondary
                         )
                     )
                 }
@@ -108,7 +123,7 @@ fun SpendScanApp() {
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = "account",
+            startDestination = "expenses",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("account") { AccountScreen() }
@@ -123,5 +138,5 @@ fun SpendScanApp() {
 @Preview(showBackground = true)
 @Composable
 fun ArticleScreenPreview() {
-    SpendScanTheme{ExpensesScreen()}
+    SpendScanTheme{SpendScanApp()}
 }
