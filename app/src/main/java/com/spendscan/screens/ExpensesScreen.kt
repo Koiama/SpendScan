@@ -124,7 +124,6 @@ fun ExpensesScreen(modifier: Modifier = Modifier) {
                             primaryText = expense.title,
                             secondaryText = expense.subtitle,
                             trailingText = expense.trailText,
-                            trailingIcon = ImageVector.vectorResource(R.drawable.drill_in_icon),
                         )
 
                         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)

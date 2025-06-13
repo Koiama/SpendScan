@@ -117,8 +117,6 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
                             onClick = { /*TODO*/ },
                             primaryText = income.title,
                             trailingText = income.trailText,
-                            trailingIcon = ImageVector.vectorResource(R.drawable.drill_in_icon),
-
                             )
                         HorizontalDivider(
                             thickness = 1.dp,

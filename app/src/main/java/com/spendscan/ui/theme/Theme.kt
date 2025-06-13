@@ -22,7 +22,8 @@ private val DarkColorScheme = darkColorScheme(
     onSecondary = GreenSecond,
     onTertiary = White,
     tertiary = GreyLight,
-    background = Greyback
+    background = Greyback,
+    surfaceContainerHigh = SurfaceContainerHigh
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -32,7 +33,8 @@ private val LightColorScheme = lightColorScheme(
     onTertiary = White,
     tertiary = GreyLight,
     background = Greyback,
-    onSurfaceVariant = TextLightGrey
+    onSurfaceVariant = TextLightGrey,
+    surfaceContainerHigh = SurfaceContainerHigh
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

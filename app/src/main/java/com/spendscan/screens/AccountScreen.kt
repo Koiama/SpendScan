@@ -83,8 +83,7 @@ fun AccountScreen(modifier: Modifier = Modifier) {
                     leadingIconBgColor = MaterialTheme.colorScheme.onTertiary,
                     itemBackgroundColor = MaterialTheme.colorScheme.onSecondary,
                     primaryText = "Баланс",
-                    trailingText = "-670 000 ₽",
-                    trailingIcon = ImageVector.vectorResource(R.drawable.drill_in_icon))
+                    trailingText = "-670 000 ₽")
 
                 HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
@@ -94,8 +93,7 @@ fun AccountScreen(modifier: Modifier = Modifier) {
                     },
                     itemBackgroundColor = MaterialTheme.colorScheme.onSecondary,
                     primaryText = "Валюта",
-                    trailingText = "₽",
-                    trailingIcon = ImageVector.vectorResource(R.drawable.drill_in_icon))
+                    trailingText = "₽")
 
                 Spacer(Modifier.size(16.dp).fillMaxWidth())
 
