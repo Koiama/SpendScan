@@ -117,7 +117,7 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
                             onClick = { /*TODO*/ },
                             primaryText = income.title,
                             trailingText = income.trailText,
-                            )
+                        )
                         HorizontalDivider(
                             thickness = 1.dp,
                             color = MaterialTheme.colorScheme.tertiary
@@ -138,7 +138,7 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
                 imageVector = ImageVector.vectorResource(id = R.drawable.button_circle),
                 contentDescription = "Добавить доход",
                 tint = Color.Unspecified,
-                modifier= Modifier.size(56.dp)
+                modifier = Modifier.size(56.dp)
             )
         }
     }

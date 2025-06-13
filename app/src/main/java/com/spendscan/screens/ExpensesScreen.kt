@@ -126,7 +126,10 @@ fun ExpensesScreen(modifier: Modifier = Modifier) {
                             trailingText = expense.trailText,
                         )
 
-                        HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+                        HorizontalDivider(
+                            thickness = 1.dp,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
                     }
                 }
             }

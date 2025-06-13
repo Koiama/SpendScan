@@ -20,12 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.spendscan.R
 import com.spendscan.data.models.expensesList
 import com.spendscan.ui.components.ListItem
 import com.spendscan.ui.components.SearchTextField
@@ -73,8 +70,9 @@ fun ArticleScreen(modifier: Modifier = Modifier) {
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(top = innerPadding.calculateTopPadding())
+        Column(
+            modifier = Modifier
+                .padding(top = innerPadding.calculateTopPadding())
         ) {
             SearchTextField(
                 modifier = Modifier
@@ -89,26 +87,26 @@ fun ArticleScreen(modifier: Modifier = Modifier) {
             )
 
 
-        HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            items(filteredExpensesList) { expense ->
-                ListItem(
-                    onClick = { /*TODO*/
-                    },
-                    leadingIconOrEmoji = expense.iconTag,
-                    primaryText = expense.title,
-                    secondaryText = null,
-                    trailingText = null,
-                    trailingIcon = null,
-                )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                items(filteredExpensesList) { expense ->
+                    ListItem(
+                        onClick = { /*TODO*/
+                        },
+                        leadingIconOrEmoji = expense.iconTag,
+                        primaryText = expense.title,
+                        secondaryText = null,
+                        trailingText = null,
+                        trailingIcon = null,
+                    )
 
-                HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+                    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+                }
             }
-        }
         }
     }
 }

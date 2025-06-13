@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,9 +45,9 @@ fun ListItem(
     primaryText: String,
     secondaryText: String? = null,
     trailingText: String? = null,
-    trailingIcon: ImageVector?=ImageVector.vectorResource(R.drawable.drill_in_icon),
+    trailingIcon: ImageVector? = ImageVector.vectorResource(R.drawable.more_vert),
     itemBackgroundColor: Color = MaterialTheme.colorScheme.background,
-    onClick: (() -> Unit)? = null,
+    onClick: (() -> Unit)? = null
 ) {
     Card(
         modifier = modifier
@@ -69,7 +69,7 @@ fun ListItem(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // --- Левая часть: Круглая иконка с цветным фоном ---
-            if (leadingIconOrEmoji!=null) {
+            if (leadingIconOrEmoji != null) {
                 Box(
                     modifier = Modifier
                         .size(24.dp)
@@ -114,7 +114,7 @@ fun ListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
-                if(trailingText!=null){
+                if (trailingText != null) {
                     Text(
                         trailingText, maxLines = 1, color = MaterialTheme.colorScheme.onSurface
                     )
@@ -122,7 +122,7 @@ fun ListItem(
                 Spacer(modifier = Modifier.width(8.dp))
                 if (trailingIcon != null) {
                     Icon(
-                        trailingIcon, contentDescription = null, modifier = Modifier.size(16.dp)
+                        trailingIcon, contentDescription = null, modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -140,7 +140,7 @@ fun ListItemPreview() {
                 primaryText = "Заголовок",
                 secondaryText = "Дополнительный текст",
                 trailingText = "100 000 ₽",
-                trailingIcon = ImageVector.vectorResource(R.drawable.drill_in_icon),
+                trailingIcon = ImageVector.vectorResource(R.drawable.more_vert),
                 onClick = { /* Логика клика */ })
             Spacer(
                 modifier = Modifier

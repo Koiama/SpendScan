@@ -2,18 +2,14 @@ package com.spendscan.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -31,7 +27,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendscan.R
-import com.spendscan.data.models.incomesList
 import com.spendscan.ui.components.ListItem
 
 @Composable
@@ -75,27 +70,33 @@ fun AccountScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .padding(top = innerPadding.calculateTopPadding())
             ) {
-                ListItem(modifier = Modifier
-                    .height(56.dp),
+                ListItem(
+                    modifier = Modifier
+                        .height(56.dp),
                     onClick = { /*TODO*/
                     },
                     leadingIconOrEmoji = "\uD83D\uDCB0",
                     leadingIconBgColor = MaterialTheme.colorScheme.onTertiary,
                     itemBackgroundColor = MaterialTheme.colorScheme.onSecondary,
                     primaryText = "Баланс",
-                    trailingText = "-670 000 ₽")
+                    trailingText = "-670 000 ₽"
+                )
 
                 HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
-                ListItem(modifier = Modifier
-                    .height(56.dp),
+                ListItem(
+                    modifier = Modifier
+                        .height(56.dp),
                     onClick = { /*TODO*/
                     },
                     itemBackgroundColor = MaterialTheme.colorScheme.onSecondary,
                     primaryText = "Валюта",
-                    trailingText = "₽")
+                    trailingText = "₽"
+                )
 
-                Spacer(Modifier.size(16.dp).fillMaxWidth())
+                Spacer(Modifier
+                    .size(16.dp)
+                    .fillMaxWidth())
 
                 Image(
                     imageVector = ImageVector.vectorResource(R.drawable.diagram),
@@ -116,7 +117,7 @@ fun AccountScreen(modifier: Modifier = Modifier) {
                 imageVector = ImageVector.vectorResource(id = R.drawable.button_circle),
                 contentDescription = "Добавить счёт",
                 tint = Color.Unspecified,
-                modifier= Modifier.size(56.dp)
+                modifier = Modifier.size(56.dp)
             )
         }
     }
