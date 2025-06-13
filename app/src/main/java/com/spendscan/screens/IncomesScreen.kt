@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,7 +68,7 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.history_icon),
                                 contentDescription = "История",
-                                tint = MaterialTheme.colorScheme.onSurface
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -118,7 +117,7 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
                             onClick = { /*TODO*/ },
                             primaryText = income.title,
                             trailingText = income.trailText,
-                            trailingIcon = ImageVector.vectorResource(R.drawable.drill_in),
+                            trailingIcon = ImageVector.vectorResource(R.drawable.drill_in_icon),
 
                             )
                         HorizontalDivider(
@@ -139,7 +138,7 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.button_circle),
-                contentDescription = "Добавить расход",
+                contentDescription = "Добавить доход",
                 tint = Color.Unspecified,
                 modifier= Modifier.size(56.dp)
             )

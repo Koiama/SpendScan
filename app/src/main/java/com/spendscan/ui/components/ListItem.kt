@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,10 +41,12 @@ import com.spendscan.ui.theme.SpendScanTheme
 fun ListItem(
     modifier: Modifier = Modifier,
     leadingIconOrEmoji: String? = null,
+    leadingIconBgColor: Color = MaterialTheme.colorScheme.onSecondary,
     primaryText: String,
     secondaryText: String? = null,
     trailingText: String,
     trailingIcon: ImageVector,
+    itemBackgroundColor: Color = MaterialTheme.colorScheme.background,
     onClick: (() -> Unit)? = null,
 ) {
     Card(
@@ -54,7 +56,7 @@ fun ListItem(
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
         shape = RoundedCornerShape(0.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = itemBackgroundColor
         )
     ) {
         Row(
@@ -72,7 +74,7 @@ fun ListItem(
                     modifier = Modifier
                         .size(24.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.onSecondary),
+                        .background(leadingIconBgColor),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -135,7 +137,7 @@ fun ListItemPreview() {
                 primaryText = "Заголовок",
                 secondaryText = "Дополнительный текст",
                 trailingText = "100 000 ₽",
-                trailingIcon = ImageVector.vectorResource(R.drawable.drill_in),
+                trailingIcon = ImageVector.vectorResource(R.drawable.drill_in_icon),
                 onClick = { /* Логика клика */ })
             Spacer(
                 modifier = Modifier
