@@ -102,7 +102,7 @@ fun ArticleScreen(modifier: Modifier = Modifier) {
                     leadingIconOrEmoji = expense.iconTag,
                     primaryText = expense.title,
                     secondaryText = null,
-                    trailingText = expense.trailText,
+                    trailingText = null,
                     trailingIcon = null,
                 )
 

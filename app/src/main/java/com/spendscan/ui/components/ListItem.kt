@@ -44,7 +44,7 @@ fun ListItem(
     leadingIconBgColor: Color = MaterialTheme.colorScheme.onSecondary,
     primaryText: String,
     secondaryText: String? = null,
-    trailingText: String,
+    trailingText: String? = null,
     trailingIcon: ImageVector?=ImageVector.vectorResource(R.drawable.drill_in_icon),
     itemBackgroundColor: Color = MaterialTheme.colorScheme.background,
     onClick: (() -> Unit)? = null,
@@ -114,9 +114,11 @@ fun ListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
-                Text(
-                    trailingText, maxLines = 1, color = MaterialTheme.colorScheme.onSurface
-                )
+                if(trailingText!=null){
+                    Text(
+                        trailingText, maxLines = 1, color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
                 Spacer(modifier = Modifier.width(8.dp))
                 if (trailingIcon != null) {
                     Icon(
