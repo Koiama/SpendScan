@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,7 +40,7 @@ import com.spendscan.ui.theme.SpendScanTheme
 @Composable
 fun ListItem(
     modifier: Modifier = Modifier,
-    leadingIconOrEmoji: String,
+    leadingIconOrEmoji: String? = null,
     primaryText: String,
     secondaryText: String? = null,
     trailingText: String,
@@ -49,7 +50,7 @@ fun ListItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(69.dp)
+            .height(70.dp)
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
         shape = RoundedCornerShape(0.dp),
         colors = CardDefaults.cardColors(
@@ -60,27 +61,24 @@ fun ListItem(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    top = 8.dp,
-                    bottom = 8.dp,
-                    start = 16.dp,
-                    end = 16.dp
+                    top = 8.dp, bottom = 8.dp, start = 16.dp, end = 16.dp
                 ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // --- Левая часть: Круглая иконка с цветным фоном ---
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSecondary),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = leadingIconOrEmoji,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium
-                )
+            if (leadingIconOrEmoji!=null) {
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.onSecondary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = leadingIconOrEmoji, fontSize = 18.sp, fontWeight = FontWeight.Medium
+                    )
+                }
             }
 
             // --- Центральная часть: Основной и дополнительный текст ---
@@ -88,16 +86,22 @@ fun ListItem(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    primaryText,
+                    text = primaryText,
                     maxLines = 1,
-                    lineHeight = 24.sp
+                    lineHeight = 24.sp,
+                    fontSize = 16.sp,
+                    letterSpacing = 0.5.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 secondaryText?.let {
                     Text(
-                        it,
+                        text = it,
                         maxLines = 1,
                         lineHeight = 20.sp,
+                        fontSize = 14.sp,
+                        letterSpacing = 0.25.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -106,19 +110,14 @@ fun ListItem(
             // --- Правая часть: Сумма и стрелка  ---
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.wrapContentWidth()
+                horizontalArrangement = Arrangement.End
             ) {
                 Text(
-                    trailingText,
-                    maxLines = 1,
-                    color = MaterialTheme.colorScheme.onSurface
+                    trailingText, maxLines = 1, color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
-                    trailingIcon,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp)
+                    trailingIcon, contentDescription = null, modifier = Modifier.size(16.dp)
                 )
 
             }
@@ -137,8 +136,7 @@ fun ListItemPreview() {
                 secondaryText = "Дополнительный текст",
                 trailingText = "100 000 ₽",
                 trailingIcon = ImageVector.vectorResource(R.drawable.drill_in),
-                onClick = { /* Логика клика */ }
-            )
+                onClick = { /* Логика клика */ })
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -151,8 +149,7 @@ fun ListItemPreview() {
                 secondaryText = null,
                 trailingText = "50 000 ₽",
                 trailingIcon = Icons.AutoMirrored.Default.ArrowBack,
-                onClick = { /* Логика клика */ }
-            )
+                onClick = { /* Логика клика */ })
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -165,8 +162,7 @@ fun ListItemPreview() {
                 secondaryText = null,
                 trailingText = "12 000 ₽",
                 trailingIcon = Icons.AutoMirrored.Default.ArrowBack,
-                onClick = { /* Логика клика */ }
-            )
+                onClick = { /* Логика клика */ })
         }
     }
 }

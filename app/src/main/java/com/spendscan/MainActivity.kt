@@ -144,5 +144,5 @@ fun SpendScanApp() {
 @Preview(showBackground = true)
 @Composable
 fun ArticleScreenPreview() {
-    SpendScanTheme{SpendScanApp()}
+    SpendScanTheme{IncomesScreen()}
 }
