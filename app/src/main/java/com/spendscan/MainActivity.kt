@@ -32,6 +32,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.spendscan.navigate.AppNavigation
+import com.spendscan.navigate.SpendScanBottomBar
 import com.spendscan.screens.AccountScreen
 import com.spendscan.screens.ArticleScreen
 import com.spendscan.screens.ExpensesScreen
@@ -63,83 +65,14 @@ data class BottomNavItem(
 
 @Composable
 fun SpendScanApp() {
-    val bottomNavItems = listOf(
-        BottomNavItem(
-            route = "expenses",
-            icon = ImageVector.vectorResource(id = R.drawable.expenses_icon),
-            label = "Расходы"
-        ), BottomNavItem(
-            route = "incomes",
-            icon = ImageVector.vectorResource(id = R.drawable.incomes_icon),
-            label = "Доходы"
-        ), BottomNavItem(
-            route = "account",
-            icon = ImageVector.vectorResource(id = R.drawable.account_icon),
-            label = "Счет"
-        ), BottomNavItem(
-            route = "article",
-            icon = ImageVector.vectorResource(id = R.drawable.articles_icon),
-            label = "Статьи"
-        ),  BottomNavItem(
-            route = "settings",
-            icon = ImageVector.vectorResource(id = R.drawable.setting_icon),
-            label = "Настройки"
-        )
-    )
-
-    val navController = rememberNavController()
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        bottomBar = {
-            NavigationBar(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                bottomNavItems.forEach { item ->
-                    val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
-                    NavigationBarItem(
-                        icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label,
-                            maxLines = 1,
-                            lineHeight = 16.sp,
-                            letterSpacing = 0.5.sp,
-                            overflow = TextOverflow.Ellipsis,
-                            fontSize = 12.sp,
-                            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium
-                        )},
-                        selected = selected,
-                        onClick = {
-                            navController.navigate(item.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.onSecondary
-                        ),
-                        modifier = Modifier.height(80.dp)
-                    )
-                }
-            }
+        bottomBar = { AppNavigation()
         }
-    ) { innerPadding ->
-        NavHost(
-            navController,
-            startDestination = "expenses",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("account") { AccountScreen() }
-            composable("article") { ArticleScreen() }
-            composable("incomes") { IncomesScreen() }
-            composable("expenses") { ExpensesScreen() }
-            composable("settings") { SettingScreen() }
+    ){ innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+
         }
     }
 }
@@ -147,5 +80,5 @@ fun SpendScanApp() {
 @Preview(showBackground = true)
 @Composable
 fun ArticleScreenPreview() {
-    SpendScanTheme{IncomesScreen()}
+    SpendScanTheme{SpendScanApp()}
 }
