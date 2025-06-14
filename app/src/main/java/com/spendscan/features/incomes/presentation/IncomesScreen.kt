@@ -1,4 +1,4 @@
-package com.spendscan.screens
+package com.spendscan.features.incomes.presentation
 
 // УДАЛИТЬ ЭТУ СТРОКУ, она вызывает конфликт:
 // import android.R.attr.title
@@ -33,7 +33,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendscan.R
-import com.spendscan.data.models.incomesList
+import com.spendscan.features.incomes.incomesList
 import com.spendscan.ui.components.ListItem
 
 
@@ -116,7 +116,7 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
                         ListItem(
                             onClick = { /*TODO*/ },
                             primaryText = income.title,
-                            trailingText = income.trailText,
+                            trailingText = income.amount,
                         )
                         HorizontalDivider(
                             thickness = 1.dp,

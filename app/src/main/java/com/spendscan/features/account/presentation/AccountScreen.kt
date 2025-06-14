@@ -1,4 +1,4 @@
-package com.spendscan.screens
+package com.spendscan.features.account.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

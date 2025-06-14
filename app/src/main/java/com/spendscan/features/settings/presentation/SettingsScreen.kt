@@ -1,4 +1,4 @@
-package com.spendscan.screens
+package com.spendscan.features.settings.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +24,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendscan.R
-import com.spendscan.data.models.settingsList
+import com.spendscan.features.settings.data.settingsList
 import com.spendscan.ui.components.ListItem
 
 @Composable

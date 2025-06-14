@@ -1,4 +1,4 @@
-package com.spendscan.screens
+package com.spendscan.features.expenses.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendscan.R
-import com.spendscan.data.models.expensesList
+import com.spendscan.features.expenses.expensesList
 import com.spendscan.ui.components.ListItem
 import com.spendscan.ui.theme.SpendScanTheme
 
@@ -123,7 +123,7 @@ fun ExpensesScreen(modifier: Modifier = Modifier) {
                             leadingIconOrEmoji = expense.iconTag,
                             primaryText = expense.title,
                             secondaryText = expense.subtitle,
-                            trailingText = expense.trailText,
+                            trailingText = expense.amount,
                         )
 
                         HorizontalDivider(

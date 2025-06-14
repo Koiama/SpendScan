@@ -1,4 +1,4 @@
-package com.spendscan.screens
+package com.spendscan.features.articles.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.spendscan.data.models.expensesList
+import com.spendscan.features.expenses.expensesList
 import com.spendscan.ui.components.ListItem
 import com.spendscan.ui.components.SearchTextField
 import com.spendscan.ui.theme.SpendScanTheme

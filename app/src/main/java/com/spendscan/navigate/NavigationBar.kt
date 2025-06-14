@@ -27,11 +27,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
 import com.spendscan.R
-import com.spendscan.screens.AccountScreen
-import com.spendscan.screens.ArticleScreen
-import com.spendscan.screens.ExpensesScreen
-import com.spendscan.screens.IncomesScreen
-import com.spendscan.screens.SettingScreen
+import com.spendscan.features.account.presentation.AccountScreen
+import com.spendscan.features.articles.presentation.ArticleScreen
+import com.spendscan.features.expenses.presentation.ExpensesScreen
+import com.spendscan.features.incomes.presentation.IncomesScreen
+import com.spendscan.features.settings.presentation.SettingScreen
 
 
 // 1. Data-класс для элементов нижней навигации
