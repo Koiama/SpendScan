@@ -44,7 +44,7 @@ import com.spendscan.ui.theme.SpendScanTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
+        installSplashScreen()
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,11 +56,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-data class BottomNavItem(
-    val route: String,
-    val icon: ImageVector,
-    val label: String
-)
 
 
 @Composable
@@ -71,9 +66,7 @@ fun SpendScanApp() {
         bottomBar = { AppNavigation()
         }
     ){ innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
-
-        }
+        
     }
 }
 
