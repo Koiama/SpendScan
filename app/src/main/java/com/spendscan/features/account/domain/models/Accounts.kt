@@ -1,4 +1,4 @@
-package com.spendscan.data.models
+package com.spendscan.features.account.domain.models
 
 data class Account(
     val id: Int,

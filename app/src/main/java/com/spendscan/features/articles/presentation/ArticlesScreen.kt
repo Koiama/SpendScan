@@ -1,4 +1,4 @@
-package com.spendscan.screens
+package com.spendscan.features.articles.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,9 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.spendscan.data.models.expensesList
+import com.spendscan.features.expenses.expensesList
 import com.spendscan.ui.components.ListItem
 import com.spendscan.ui.components.SearchTextField
+import com.spendscan.ui.components.TopBar
 import com.spendscan.ui.theme.SpendScanTheme
 
 @Composable
@@ -51,23 +52,7 @@ fun ArticleScreen(modifier: Modifier = Modifier) {
     Scaffold(
         modifier = modifier,
         topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .background(MaterialTheme.colorScheme.primary)
-            ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = "Мои статьи",
-                        lineHeight = 28.sp,
-                        fontSize = 22.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        letterSpacing = 0.sp,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            }
+            TopBar("Мои статьи")
         }
     ) { innerPadding ->
         Column(

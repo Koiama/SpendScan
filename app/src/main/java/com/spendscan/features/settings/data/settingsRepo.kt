@@ -1,8 +1,6 @@
-package com.spendscan.data.models
+package com.spendscan.features.settings.data
 
-data class Setting(
-    val title: String
-)
+import com.spendscan.features.settings.domain.models.Setting
 
 val settingsList = listOf<Setting>(
     Setting(
