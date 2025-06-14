@@ -34,7 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendscan.R
 import com.spendscan.features.incomes.incomesList
+import com.spendscan.ui.components.FloatingAddButton
 import com.spendscan.ui.components.ListItem
+import com.spendscan.ui.components.TopBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,35 +46,11 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
         Scaffold(
             modifier = modifier,
             topBar = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .background(MaterialTheme.colorScheme.primary)
-                ) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            text = "Доходы сегодня",
-                            lineHeight = 28.sp,
-                            fontSize = 22.sp,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            letterSpacing = 0.sp,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                        IconButton(
-                            onClick = { /*TODO*/ },
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .padding(end = 4.dp)
-                        ) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.history_icon),
-                                contentDescription = "История",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
+                TopBar(
+                    title = "Доходы сегодня",
+                    actionIcon = ImageVector.vectorResource(id = R.drawable.history_icon),
+                    onActionClick = { /*TODO*/ }
+                )
             },
         ) { innerPadding ->
             Column(
@@ -126,20 +104,8 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
                 }
             }
         }
-        FloatingActionButton(
-            onClick = { /*TODO*/ },
-            shape = CircleShape,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(bottom = 14.dp, end = 16.dp)
-                .size(56.dp)
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.button_circle),
-                contentDescription = "Добавить доход",
-                tint = Color.Unspecified,
-                modifier = Modifier.size(56.dp)
-            )
-        }
+        FloatingAddButton(
+            onClick = { /*TODO*/}
+        )
     }
 }

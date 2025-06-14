@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendscan.R
 import com.spendscan.features.expenses.expensesList
+import com.spendscan.ui.components.FloatingAddButton
 import com.spendscan.ui.components.ListItem
+import com.spendscan.ui.components.TopBar
 import com.spendscan.ui.theme.SpendScanTheme
 
 
@@ -41,44 +42,13 @@ fun ExpensesScreen(modifier: Modifier = Modifier) {
             modifier = modifier
                 .background(color = MaterialTheme.colorScheme.background),
             topBar = {
-                // Вся верхняя панель - это Column для фона и высоты
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .background(MaterialTheme.colorScheme.primary)
-                ) {
-                    // Используем Box для наложения элементов
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Text(
-                            text = "Расходы сегодня",
-                            lineHeight = 28.sp,
-                            fontSize = 22.sp,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            letterSpacing = 0.sp,
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        )
-
-                        IconButton(
-                            onClick = { /*TODO*/ },
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .padding(end = 4.dp)
-                        ) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.history_icon),
-                                contentDescription = "История",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-            },
-
-            ) { innerPadding ->
+                TopBar(
+                    title = "Расходы сегодня",
+                    actionIcon = ImageVector.vectorResource(id = R.drawable.history_icon),
+                    onActionClick = { /*TODO*/ }
+                )
+            }
+        ) { innerPadding ->
             Column(modifier = Modifier.padding(top = innerPadding.calculateTopPadding())) {
                 // Строка "Всего"
                 Row(
@@ -134,19 +104,9 @@ fun ExpensesScreen(modifier: Modifier = Modifier) {
                 }
             }
         }
-        FloatingActionButton(
-            onClick = { /*TODO*/ },
-            shape = CircleShape,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(bottom = 14.dp, end = 16.dp)
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.button_circle),
-                contentDescription = "Добавить расход",
-                tint = Color.Unspecified
-            )
-        }
+        FloatingAddButton(
+            onClick = { /*TODO*/}
+        )
     }
 }
 

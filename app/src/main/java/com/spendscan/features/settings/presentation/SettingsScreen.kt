@@ -26,29 +26,14 @@ import androidx.compose.ui.unit.sp
 import com.spendscan.R
 import com.spendscan.features.settings.data.settingsList
 import com.spendscan.ui.components.ListItem
+import com.spendscan.ui.components.TopBar
 
 @Composable
 fun SettingScreen(modifier: Modifier = Modifier) {
     Scaffold(
         modifier = modifier,
         topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .background(MaterialTheme.colorScheme.primary)
-            ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        text = "Настройки",
-                        lineHeight = 28.sp,
-                        fontSize = 22.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        letterSpacing = 0.sp,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            }
+            TopBar("Настройки")
         }
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(top = innerPadding.calculateTopPadding())) {
