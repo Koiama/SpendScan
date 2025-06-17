@@ -3,7 +3,8 @@ package com.spendscan.navigate
 // Определяем объекты для каждого маршрута
 object Route {
     object Expenses {
-        const val route = "expenses"
+        const val route = "expenses_screen" // Конкретный экран "Расходы"
+        const val graphRoute = "expenses_graph" // Маршрут для всего графа "Расходы"
     }
 
     object Incomes {

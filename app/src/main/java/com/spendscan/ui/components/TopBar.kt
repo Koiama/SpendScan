@@ -17,15 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.padding
 
 @Composable
 fun TopBar(
     title: String,
     // Опциональная иконка и опциональный обработчик клика
     actionIcon: ImageVector? = null, // Иконка может быть null
-    onActionClick: (() -> Unit)? = null // Действие может быть null
-) {
+    onActionClick: (() -> Unit)? = null, // Действие может быть null
+    backButton: ImageVector? = null,
+    onBackClick: (() -> Unit)? = null,
+    ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,6 +58,21 @@ fun TopBar(
                         imageVector = actionIcon,
                         contentDescription = "Действие",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            if (backButton != null && onBackClick != null) {
+                IconButton(
+                    onClick = onBackClick, // Используем переданный onClick
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(start = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = backButton,
+                        contentDescription = "Назад",
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }

@@ -20,18 +20,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.spendscan.R
 import com.spendscan.features.expenses.expensesList
+import com.spendscan.navigate.Route
 import com.spendscan.ui.components.FloatingAddButton
 import com.spendscan.ui.components.ListItem
 import com.spendscan.ui.components.TopBar
-import com.spendscan.ui.theme.SpendScanTheme
 
 @Composable
-fun ExpensesScreen(modifier: Modifier = Modifier) {
+fun ExpensesScreen(navController: NavController, modifier: Modifier = Modifier) {
     Box {
         Scaffold(
             modifier = modifier
@@ -40,7 +40,7 @@ fun ExpensesScreen(modifier: Modifier = Modifier) {
                 TopBar(
                     title = "Расходы сегодня",
                     actionIcon = ImageVector.vectorResource(id = R.drawable.history_icon),
-                    onActionClick = { /**/ } //Пофиксить навигацию
+                    onActionClick = { navController.navigate(Route.MyHistory.route) }
                 )
             }
         ) { innerPadding ->
@@ -102,13 +102,5 @@ fun ExpensesScreen(modifier: Modifier = Modifier) {
         FloatingAddButton(
             onClick = { /*TODO*/ }
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ExpensesScreenPreview() {
-    SpendScanTheme {
-        ExpensesScreen()
     }
 }

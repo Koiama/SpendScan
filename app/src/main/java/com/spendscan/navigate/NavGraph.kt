@@ -9,8 +9,9 @@ import com.spendscan.features.account.presentation.AccountScreen
 import com.spendscan.features.articles.presentation.ArticleScreen
 import com.spendscan.features.expenses.presentation.ExpensesScreen
 import com.spendscan.features.incomes.presentation.IncomesScreen
-import com.spendscan.features.myHistory.MyHistoryScreen
+import com.spendscan.features.myHistory.presentation.MyHistoryScreen
 import com.spendscan.features.settings.presentation.SettingScreen
+import androidx.navigation.navigation
 
 
 // 3. Основная Composable функция для всей навигации
@@ -19,15 +20,26 @@ fun SpendScanNavGraph(navController: NavHostController, modifier: Modifier = Mod
 
     NavHost(
         navController,
-        startDestination = Route.Expenses.route,
+        startDestination = Route.Expenses.graphRoute,
         modifier = modifier
     ) {
-        composable(Route.Expenses.route) { ExpensesScreen() }
+        composable(Route.Expenses.route) { ExpensesScreen(navController = navController) }
         composable(Route.Incomes.route) { IncomesScreen() }
         composable(Route.Account.route) { AccountScreen() }
         composable(Route.Article.route){ ArticleScreen() }
         composable(Route.Settings.route) { SettingScreen() }
-        composable(Route.MyHistory.route) { MyHistoryScreen() }
+
+        navigation(
+            startDestination = Route.Expenses.route,
+            route = Route.Expenses.graphRoute
+        ) {
+            composable(Route.Expenses.route) { ExpensesScreen(navController = navController)
+            }
+            composable(Route.MyHistory.route) {
+                MyHistoryScreen(navController = navController)
+            }
+        }
+
         composable(Route.AddAccount.route) { /* TODO: AddAccountScreen() */ }
     }
 
