@@ -11,17 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +30,6 @@ import com.spendscan.ui.components.ListItem
 import com.spendscan.ui.components.TopBar
 import com.spendscan.ui.theme.SpendScanTheme
 
-
 @Composable
 fun ExpensesScreen(modifier: Modifier = Modifier) {
     Box {
@@ -45,7 +40,7 @@ fun ExpensesScreen(modifier: Modifier = Modifier) {
                 TopBar(
                     title = "Расходы сегодня",
                     actionIcon = ImageVector.vectorResource(id = R.drawable.history_icon),
-                    onActionClick = { /*TODO*/ }
+                    onActionClick = { /**/ } //Пофиксить навигацию
                 )
             }
         ) { innerPadding ->
@@ -105,7 +100,7 @@ fun ExpensesScreen(modifier: Modifier = Modifier) {
             }
         }
         FloatingAddButton(
-            onClick = { /*TODO*/}
+            onClick = { /*TODO*/ }
         )
     }
 }
