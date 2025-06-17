@@ -1,6 +1,5 @@
 package com.spendscan.navigate
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
@@ -8,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,13 +22,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 
 import com.spendscan.R
 import com.spendscan.features.account.presentation.AccountScreen
 import com.spendscan.features.articles.presentation.ArticleScreen
 import com.spendscan.features.expenses.presentation.ExpensesScreen
 import com.spendscan.features.incomes.presentation.IncomesScreen
+import com.spendscan.features.myHistory.MyHistoryScreen
 import com.spendscan.features.settings.presentation.SettingScreen
 
 
@@ -46,58 +44,33 @@ data class BottomNavItem(
 private fun getBottomNavItems(): List<BottomNavItem> {
     return listOf(
         BottomNavItem(
-            route = "expenses",
+            route = Route.Expenses.route,
             icon = ImageVector.vectorResource(id = R.drawable.expenses_icon),
             label = "Расходы"
         ),
         BottomNavItem(
-            route = "incomes",
+            route = Route.Incomes.route,
             icon = ImageVector.vectorResource(id = R.drawable.incomes_icon),
             label = "Доходы"
         ),
         BottomNavItem(
-            route = "account",
+            route = Route.Account.route,
             icon = ImageVector.vectorResource(id = R.drawable.account_icon),
             label = "Счет"
         ),
         BottomNavItem(
-            route = "article",
+            route = Route.Article.route,
             icon = ImageVector.vectorResource(id = R.drawable.articles_icon),
             label = "Статьи"
         ),
         BottomNavItem(
-            route = "settings",
+            route = Route.Settings.route,
             icon = ImageVector.vectorResource(id = R.drawable.setting_icon),
             label = "Настройки"
         )
     )
 }
 
-// 3. Основная Composable функция для всей навигации и Scaffold
-@Composable
-fun AppNavigation() {
-    val navController = rememberNavController()
-
-    Scaffold(
-        bottomBar = {
-            // Нижняя панель навигации
-            SpendScanBottomBar(navController = navController)
-        }
-    ) { innerPadding ->
-        // NavHost для отображения экранов
-        NavHost(
-            navController,
-            startDestination = "expenses",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("account") { AccountScreen() }
-            composable("article") { ArticleScreen() }
-            composable("incomes") { IncomesScreen() }
-            composable("expenses") { ExpensesScreen() }
-            composable("settings") { SettingScreen() }
-        }
-    }
-}
 
 @Composable
 fun SpendScanBottomBar(navController: NavHostController) {
