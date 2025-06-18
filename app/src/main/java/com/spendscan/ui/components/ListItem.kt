@@ -45,6 +45,7 @@ fun ListItem(
     primaryText: String,
     secondaryText: String? = null,
     trailingText: String? = null,
+    secondTrailingText: String? = null,
     trailingIcon: ImageVector? = ImageVector.vectorResource(R.drawable.more_vert),
     itemBackgroundColor: Color = MaterialTheme.colorScheme.background,
     onClick: (() -> Unit)? = null
@@ -78,7 +79,7 @@ fun ListItem(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = leadingIconOrEmoji, fontSize = 18.sp, fontWeight = FontWeight.Medium
+                        text = leadingIconOrEmoji, fontSize = 10.sp, fontWeight = FontWeight.Medium
                     )
                 }
             }
@@ -114,11 +115,24 @@ fun ListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
-                if (trailingText != null) {
-                    Text(
-                        trailingText, maxLines = 1, color = MaterialTheme.colorScheme.onSurface
-                    )
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    if (trailingText != null) {
+                        Text(
+                            trailingText, maxLines = 1, color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    if (secondTrailingText != null) {
+                        Text(
+                            secondTrailingText,
+                            maxLines = 1,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
+
                 Spacer(modifier = Modifier.width(8.dp))
                 if (trailingIcon != null) {
                     Icon(
