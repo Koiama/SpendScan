@@ -116,11 +116,12 @@ fun ListItem(
                 horizontalArrangement = Arrangement.End
             ) {
                 Column(
-                    modifier = Modifier.weight(1f)
                 ) {
                     if (trailingText != null) {
                         Text(
-                            trailingText, maxLines = 1, color = MaterialTheme.colorScheme.onSurface
+                            trailingText,
+                            maxLines = 1,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
 

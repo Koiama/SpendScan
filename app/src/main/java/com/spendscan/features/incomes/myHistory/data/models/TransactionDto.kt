@@ -1,12 +1,17 @@
 package com.spendscan.features.incomes.myHistory.data.models
 
+import android.annotation.SuppressLint
+import kotlinx.serialization.Serializable
+
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
 data class TransactionDto (
-    val id: String,
+    val id: Int,
+    val account: AccountState,
+    val category: Category,
     val amount: String,
-    val currency: String,
-    val account: TransactionAccount,
-    val emoji: String? = null,
     val transactionDate: String,
+    val comment: String? = null,
     val createdAt: String,
     val updatedAt: String
 )

@@ -34,7 +34,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     kotlin {
         compilerOptions {
@@ -67,10 +67,15 @@ dependencies {
     implementation(libs.lottie.compose)
     implementation(libs.androidx.material3.icons.extended)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.kotlinx.serialization.json)
+    // Retrofit и OkHttp
     implementation(libs.retrofit.core)
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit.kotlinx.serialization.converter)
+
+    // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+
+    // Kotlinx Serialization
+    implementation(libs.kotlinx.serialization.json)
 }

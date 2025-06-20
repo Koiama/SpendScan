@@ -1,6 +1,7 @@
 package com.spendscan.features.incomes.myHistory.presentation
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,24 +9,42 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.spendscan.R
 import com.spendscan.features.incomes.incomesList
 import com.spendscan.ui.components.ListItem
 import com.spendscan.ui.components.TopBar
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.spendscan.features.incomes.myHistory.data.RetrofitClient
 
 //Только история расходов, ручка period
 
 @Composable
 fun MyHistoryScreen(
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: MyHistoryViewModel = viewModel(
+        factory = MyHistoryViewModelFactory(RetrofitClient.myHistoryRepository)
+    )
 ) {
+    val transactions by viewModel.transactions.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        val userAccountId = "1" // Пример ID из Swagger
+        viewModel.loadTransactions(userAccountId)
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -43,33 +62,42 @@ fun MyHistoryScreen(
                 primaryText = "Начало",
                 itemBackgroundColor = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier.height(55.dp),
-                secondaryText = "Февраль 2025"
+                trailingText = "Февраль 2025",
+                trailingIcon = null
             )
             HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             ListItem(
                 primaryText = "Конец",
                 itemBackgroundColor = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier.height(55.dp),
-                secondaryText = "23:41"
+                trailingText = "23:41",
+                trailingIcon = null
             )
             HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             ListItem(
                 primaryText = "Сумма",
                 itemBackgroundColor = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier.height(55.dp),
-                secondaryText = "125 868 ₽"
+                trailingText = "125 868 ₽",
+                trailingIcon = null
             )
             LazyColumn() {
-                items(incomesList) { income ->
+                items(transactions) { transaction ->
                     ListItem(
                         onClick = { /*TODO*/ },
-                        primaryText = income.title,
-                        trailingText = income.amount,
+                        primaryText = Column {
+                            Text(text = "${transaction.account.name}")
+                            Text(text = "${transaction.comment}")
+                        }.toString(),
+                        trailingText = "${transaction.amount} ",
+                        leadingIconOrEmoji = "${transaction.category.emoji.orEmpty()}",
+                        secondaryText = Column {
+                            Text(text = "${transaction.amount}")
+                            Text(text = "${transaction.createdAt}")
+                        }.toString(),
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = MaterialTheme.colorScheme.tertiary
-                    )
+                    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
                 }
             }
         }
