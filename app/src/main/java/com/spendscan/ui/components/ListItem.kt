@@ -104,6 +104,7 @@ fun ListItem(
                         maxLines = 1,
                         lineHeight = 20.sp,
                         fontSize = 14.sp,
+                        overflow = TextOverflow.Ellipsis,
                         letterSpacing = 0.25.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -122,6 +123,7 @@ fun ListItem(
                             trailingText,
                             maxLines = 1,
                             color = MaterialTheme.colorScheme.onSurface,
+                            overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.align(Alignment.End)
                         )
                     }
@@ -131,6 +133,7 @@ fun ListItem(
                             secondTrailingText,
                             maxLines = 1,
                             color = MaterialTheme.colorScheme.onSurface,
+                            overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.align(Alignment.End)
                         )
                     }

@@ -36,8 +36,8 @@ class MyHistoryViewModel(
     private val _endDate = MutableStateFlow<Long?>(null)
     val endDate: StateFlow<Long?> = _endDate.asStateFlow()
 
-    private val _totalExpenses = MutableStateFlow(BigDecimal.ZERO)
-    val totalExpenses: StateFlow<BigDecimal> = _totalExpenses.asStateFlow()
+    private val _totalExpenses = MutableStateFlow("")
+    val totalExpenses: StateFlow<String> = _totalExpenses.asStateFlow()
 
     init {
         loadTransactions()
@@ -81,7 +81,6 @@ class MyHistoryViewModel(
                     repository.getTransactionsByPeriod(accountId, formattedStartDate, formattedEndDate)
 
 
-                // СНАЧАЛА ФИЛЬТРУЕМ, ПОТОМ СОРТИРУЕМ И ОБНОВЛЯЕМ _transactions ---
                 val onlyExpenses = fetchedTransactions
                     .filter { transactionDto ->
                         !(transactionDto.category.isIncome ?: true)
@@ -90,28 +89,35 @@ class MyHistoryViewModel(
                         try {
                             Instant.parse(transactionDto.createdAt)
                         } catch (e: DateTimeParseException) {
-                            Log.e("SpendScanApp", "SORTING ERROR: Failed to parse createdAt '${transactionDto.createdAt}'. Defaulting to Instant.MIN.", e)
+                            Log.e("SpendScanApp", "ОШИБКА СОРТИРОВКИ: Не удалось разобрать createdAt '${transactionDto.createdAt}'. Используется Instant.MIN.", e)
                             Instant.MIN
                         } catch (e: Exception) {
-                            Log.e("SpendScanApp", "SORTING ERROR: Unexpected error parsing createdAt '${transactionDto.createdAt}'. Defaulting to Instant.MIN.", e)
+                            Log.e("SpendScanApp", "ОШИБКА СОРТИРОВКИ: Непредвиденная ошибка при разборе createdAt '${transactionDto.createdAt}'. Используется Instant.MIN.", e)
                             Instant.MIN
                         }
                     }
 
                 _transactions.value = onlyExpenses
 
-                // --- РАСЧЕТ СУММЫ РАСХОДОВ ---
-                val currentTotal = _transactions.value
-                    .mapNotNull { transactionDto ->
-                        try {
-                            BigDecimal(transactionDto.amount).abs()
-                        } catch (e: NumberFormatException) {
-                            Log.e("SpendScanApp", "Error parsing amount '${transactionDto.amount}'. Skipping transaction from total calculation.", e)
-                            null
-                        }
-                    }
-                    .fold(BigDecimal.ZERO) { acc, amount -> acc.add(amount) }
+                // --- РАСЧЕТ СУММЫ РАСХОДОВ С УЧЕТОМ ВАЛЮТЫ ---
+                var currentTotalAmount = BigDecimal.ZERO
+                var currency: String? = null
 
+                _transactions.value.forEach { transactionDto ->
+                    try {
+                        currentTotalAmount = currentTotalAmount.add(BigDecimal(transactionDto.amount).abs())
+                        if (currency == null) {
+                            currency = transactionDto.account.currency
+                        } else if (currency != transactionDto.account.currency) {
+                            // TODO: Handle case where transactions have different currencies
+                            Log.w("SpendScanApp", "Транзакции имеют разные валюты. Необходимо обработать этот случай.")
+                        }
+                    } catch (e: NumberFormatException) {
+                        Log.e("SpendScanApp", "Ошибка при разборе суммы '${transactionDto.amount}'. Транзакция пропущена в расчете общей суммы.", e)
+                    }
+                }
+
+                _totalExpenses.value = "$currentTotalAmount ${currency?:""}"
                 Log.d("SpendScanApp", "MyHistoryViewModel: Transactions loaded successfully. Count: ${_transactions.value.size}")
             } catch (e: Exception) {
                 _error.value = "Ошибка загрузки транзакций: ${e.message ?: "Неизвестная ошибка"}"

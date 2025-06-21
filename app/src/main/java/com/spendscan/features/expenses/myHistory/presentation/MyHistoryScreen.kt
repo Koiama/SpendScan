@@ -47,6 +47,7 @@ fun MyHistoryScreen(
     val error by viewModel.error.collectAsState()
     val startDate by viewModel.startDate.collectAsState()
     val endDate by viewModel.endDate.collectAsState()
+    val totalExpenses by viewModel.totalExpenses.collectAsState()
 
 
 
@@ -75,7 +76,7 @@ fun MyHistoryScreen(
                 primaryText = "Сумма",
                 itemBackgroundColor = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier.height(55.dp),
-                trailingText = "125 868 ₽",
+                trailingText = totalExpenses,
                 trailingIcon = null
             )
             HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
@@ -88,7 +89,7 @@ fun MyHistoryScreen(
                 )
             } else if (error != null) {
                 Text(
-                    text = "Ошибка: ${error}",
+                    text = "Ошибка загрузки!",
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier
                         .fillMaxWidth()
