@@ -1,4 +1,4 @@
-package com.spendscan.features.incomes.myHistory.data.models
+package com.spendscan.features.expenses.myHistory.data.models
 
 import java.time.Instant
 import java.time.ZoneId
@@ -9,9 +9,9 @@ fun String.toFormattedTime(): String {
     return try {
         // Парсим строку в Instant (момент времени в UTC)
         val instant = Instant.parse(this)
-        val localTime = instant.atZone(ZoneId.systemDefault()).toLocalTime()
-        val formatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
-        localTime.format(formatter)
+        val zonedDateTime = instant.atZone(ZoneId.systemDefault())
+        val formatter = DateTimeFormatter.ofPattern("dd.MM, HH:mm", Locale.getDefault())
+        zonedDateTime.format(formatter)
     } catch (e: Exception) {
         e.printStackTrace()
         "Неизвестно"

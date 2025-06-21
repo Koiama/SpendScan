@@ -1,4 +1,4 @@
-package com.spendscan.features.incomes.myHistory.data.models
+package com.spendscan.features.expenses.myHistory.data.models
 
 import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable

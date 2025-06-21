@@ -1,4 +1,4 @@
-package com.spendscan.features.incomes.myHistory.data.models
+package com.spendscan.features.expenses.myHistory.data.models
 
 import com.spendscan.features.account.domain.models.Currency
 import java.text.NumberFormat

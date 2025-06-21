@@ -121,7 +121,8 @@ fun ListItem(
                         Text(
                             trailingText,
                             maxLines = 1,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.align(Alignment.End)
                         )
                     }
 

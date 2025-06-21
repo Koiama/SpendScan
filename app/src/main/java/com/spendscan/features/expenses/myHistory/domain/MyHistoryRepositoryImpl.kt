@@ -1,7 +1,7 @@
-package com.spendscan.features.incomes.myHistory.domain
+package com.spendscan.features.expenses.myHistory.domain
 
-import com.spendscan.features.incomes.myHistory.data.api.TransactionApiService
-import com.spendscan.features.incomes.myHistory.data.models.TransactionDto
+import com.spendscan.features.expenses.myHistory.data.api.TransactionApiService
+import com.spendscan.features.expenses.myHistory.data.models.TransactionDto
 
 class MyHistoryRepositoryImpl(private val apiService: TransactionApiService) : MyHistoryRepository {
     override suspend fun getTransactionsByPeriod(

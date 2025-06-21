@@ -1,4 +1,4 @@
-package com.spendscan.features.incomes.myHistory.data
+package com.spendscan.features.expenses.myHistory.data
 
 import okhttp3.logging.HttpLoggingInterceptor
 import kotlinx.serialization.json.Json
@@ -6,9 +6,9 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import okhttp3.MediaType.Companion.toMediaType
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.spendscan.features.incomes.myHistory.data.api.TransactionApiService
-import com.spendscan.features.incomes.myHistory.domain.MyHistoryRepository
-import com.spendscan.features.incomes.myHistory.domain.MyHistoryRepositoryImpl
+import com.spendscan.features.expenses.myHistory.data.api.TransactionApiService
+import com.spendscan.features.expenses.myHistory.domain.MyHistoryRepository
+import com.spendscan.features.expenses.myHistory.domain.MyHistoryRepositoryImpl
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {

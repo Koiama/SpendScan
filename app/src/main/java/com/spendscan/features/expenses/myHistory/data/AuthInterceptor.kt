@@ -1,4 +1,4 @@
-package com.spendscan.features.incomes.myHistory.data
+package com.spendscan.features.expenses.myHistory.data
 
 import okhttp3.Interceptor
 import okhttp3.Response

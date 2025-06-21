@@ -9,9 +9,9 @@ import com.spendscan.features.account.presentation.AccountScreen
 import com.spendscan.features.articles.presentation.ArticleScreen
 import com.spendscan.features.expenses.presentation.ExpensesScreen
 import com.spendscan.features.incomes.presentation.IncomesScreen
-import com.spendscan.features.incomes.myHistory.presentation.MyHistoryScreen
 import com.spendscan.features.settings.presentation.SettingScreen
 import androidx.navigation.navigation
+import com.spendscan.features.expenses.myHistory.presentation.MyHistoryScreen
 
 
 // 3. Основная Composable функция для всей навигации

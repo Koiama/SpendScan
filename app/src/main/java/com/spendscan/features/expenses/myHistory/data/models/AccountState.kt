@@ -1,14 +1,13 @@
-package com.spendscan.features.incomes.myHistory.data.models
+package com.spendscan.features.expenses.myHistory.data.models
 
 import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
-
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class Category(
+data class AccountState(
     val id: Int,
     val name: String,
-    val emoji: String? = null,
-    val isIncome: Boolean
-    )
+    val balance: String,
+    val currency: String
+)

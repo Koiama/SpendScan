@@ -1,6 +1,6 @@
-package com.spendscan.features.incomes.myHistory.domain
+package com.spendscan.features.expenses.myHistory.domain
 
-import com.spendscan.features.incomes.myHistory.data.models.TransactionDto
+import com.spendscan.features.expenses.myHistory.data.models.TransactionDto
 
 interface MyHistoryRepository {
     // Метод для получения транзакций за период
