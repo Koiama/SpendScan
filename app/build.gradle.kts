@@ -1,7 +1,9 @@
+import org.gradle.api.JavaVersion
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
 }
 
 android {
@@ -28,11 +30,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
+    }
+    kotlin {
+        compilerOptions {
+            freeCompilerArgs.add("-opt-in=kotlinx.serialization.InternalSerializationApi")
+
+
+        }
     }
     buildFeatures {
         compose = true
@@ -59,5 +69,16 @@ dependencies {
     implementation(libs.lottie.compose)
     implementation(libs.androidx.material3.icons.extended)
     implementation(libs.androidx.core.splashscreen)
+    // Retrofit и OkHttp
+    implementation(libs.retrofit.core)
+    implementation(libs.okhttp.logging)
+    implementation(libs.retrofit.kotlinx.serialization.converter)
 
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Kotlinx Serialization
+    implementation(libs.kotlinx.serialization.json)
+    implementation (libs.threetenabp)
 }

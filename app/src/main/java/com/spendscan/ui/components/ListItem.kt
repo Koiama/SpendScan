@@ -45,6 +45,7 @@ fun ListItem(
     primaryText: String,
     secondaryText: String? = null,
     trailingText: String? = null,
+    secondTrailingText: String? = null,
     trailingIcon: ImageVector? = ImageVector.vectorResource(R.drawable.more_vert),
     itemBackgroundColor: Color = MaterialTheme.colorScheme.background,
     onClick: (() -> Unit)? = null
@@ -78,7 +79,7 @@ fun ListItem(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = leadingIconOrEmoji, fontSize = 18.sp, fontWeight = FontWeight.Medium
+                        text = leadingIconOrEmoji, fontSize = 10.sp, fontWeight = FontWeight.Medium
                     )
                 }
             }
@@ -97,12 +98,13 @@ fun ListItem(
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                secondaryText?.let {
+                if (secondaryText!=null && secondaryText!="") {
                     Text(
-                        text = it,
+                        text = secondaryText,
                         maxLines = 1,
                         lineHeight = 20.sp,
                         fontSize = 14.sp,
+                        overflow = TextOverflow.Ellipsis,
                         letterSpacing = 0.25.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -114,11 +116,29 @@ fun ListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
-                if (trailingText != null) {
-                    Text(
-                        trailingText, maxLines = 1, color = MaterialTheme.colorScheme.onSurface
-                    )
+                Column(
+                ) {
+                    if (trailingText != null) {
+                        Text(
+                            trailingText,
+                            maxLines = 1,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.align(Alignment.End)
+                        )
+                    }
+
+                    if (secondTrailingText != null) {
+                        Text(
+                            secondTrailingText,
+                            maxLines = 1,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.align(Alignment.End)
+                        )
+                    }
                 }
+
                 Spacer(modifier = Modifier.width(8.dp))
                 if (trailingIcon != null) {
                     Icon(

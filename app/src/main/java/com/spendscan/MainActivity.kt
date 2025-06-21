@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.spendscan.navigate.SpendScanBottomBar
 import com.spendscan.navigate.SpendScanNavGraph
 import com.spendscan.ui.theme.SpendScanTheme
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
+        AndroidThreeTen.init(this)
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {

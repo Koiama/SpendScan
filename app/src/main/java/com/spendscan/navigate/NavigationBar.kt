@@ -19,17 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 import com.spendscan.R
-import com.spendscan.features.account.presentation.AccountScreen
-import com.spendscan.features.articles.presentation.ArticleScreen
-import com.spendscan.features.expenses.presentation.ExpensesScreen
-import com.spendscan.features.incomes.presentation.IncomesScreen
-import com.spendscan.features.myHistory.MyHistoryScreen
-import com.spendscan.features.settings.presentation.SettingScreen
 
 
 // 1. Data-класс для элементов нижней навигации
@@ -44,12 +36,12 @@ data class BottomNavItem(
 private fun getBottomNavItems(): List<BottomNavItem> {
     return listOf(
         BottomNavItem(
-            route = Route.Expenses.route,
+            route = Route.Expenses.graphRoute,
             icon = ImageVector.vectorResource(id = R.drawable.expenses_icon),
             label = "Расходы"
         ),
         BottomNavItem(
-            route = Route.Incomes.route,
+            route =Route.Incomes.graphRoute,
             icon = ImageVector.vectorResource(id = R.drawable.incomes_icon),
             label = "Доходы"
         ),
