@@ -24,6 +24,8 @@ fun SpendScanNavGraph(navController: NavHostController, modifier: Modifier = Mod
         startDestination = Route.Expenses.graphRoute,
         modifier = modifier
     ) {
+        composable(Route.Incomes.route) {IncomesScreen(navController = navController)}
+        composable(Route.Expenses.route) {ExpensesScreen(navController = navController)}
         composable(Route.Account.route) { AccountScreen() }
         composable(Route.Article.route){ ArticleScreen() }
         composable(Route.Settings.route) { SettingScreen() }

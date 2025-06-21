@@ -16,22 +16,40 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.spendscan.R
 import com.spendscan.features.expenses.expensesList
+import com.spendscan.features.expenses.myHistory.data.RetrofitClient
 import com.spendscan.navigate.Route
 import com.spendscan.ui.components.FloatingAddButton
 import com.spendscan.ui.components.ListItem
 import com.spendscan.ui.components.TopBar
+import androidx.compose.runtime.getValue
 
 @Composable
-fun ExpensesScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun ExpensesScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    accountId: String = "1",
+    viewModel: TodayExpensesViewModel = viewModel(
+        factory = TodayExpensesViewModelFactory(RetrofitClient.myHistoryRepository, accountId)
+    )
+
+) {
+    // Собираем состояния из ViewModel для отображения в UI
+    val expenses by viewModel.transactions.collectAsState()
+    val totalExpenses by viewModel.totalExpenses.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
+
     Box {
         Scaffold(
             modifier = modifier
@@ -64,7 +82,7 @@ fun ExpensesScreen(navController: NavController, modifier: Modifier = Modifier) 
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "436 558 ₽",
+                        text = totalExpenses,
                         lineHeight = 24.sp,
                         fontSize = 16.sp,
                         letterSpacing = 0.5.sp,
@@ -76,25 +94,44 @@ fun ExpensesScreen(navController: NavController, modifier: Modifier = Modifier) 
                 HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
 
-                // LazyColumn для отображения списка расходов
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    items(expensesList) { expense ->
-                        ListItem(
-                            onClick = { /*TODO*/
-                            },
-                            leadingIconOrEmoji = expense.iconTag,
-                            primaryText = expense.title,
-                            secondaryText = expense.subtitle,
-                            trailingText = expense.amount,
-                        )
+                // Обработка различных состояний данных: загрузка, ошибка, пустой список, или отображение данных
+                when {
+                    isLoading -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text("Загрузка расходов...")
+                        }
+                    }
+                    error != null -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text("Ошибка: ${error!!}")
+                        }
+                    }
+                    expenses.isEmpty() -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text("Нет расходов за сегодня.")
+                        }
+                    }
+                    else -> {
+                        // LazyColumn для отображения списка расходов из ViewModel
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            items(expenses) { expense ->
+                                ListItem(
+                                    onClick = { /* TODO*/ },
+                                    leadingIconOrEmoji = expense.category.emoji,
+                                    primaryText = expense.category.name,
+                                    secondaryText = expense.comment ?: "Без комментария",
+                                    trailingText = "${expense.amount} ${expense.account.currency}",
+                                )
 
-                        HorizontalDivider(
-                            thickness = 1.dp,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
+                                HorizontalDivider(
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.tertiary
+                                )
+                            }
+                        }
                     }
                 }
             }
