@@ -1,5 +1,6 @@
-package com.spendscan.features.expenses.myHistory.presentation
+package com.spendscan.features.expenses.myHistory.presentationIncomes
 
+import com.spendscan.features.expenses.myHistory.presentation.DateSelectionSection
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,15 +30,16 @@ import com.spendscan.features.expenses.myHistory.data.models.formatAmountSimple
 import com.spendscan.features.expenses.myHistory.data.models.toFormattedTime
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyHistoryScreen(
+fun MyHistoryIncomesScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     userAccountId: String = "1", // Передаем accountId прямо здесь
 
-    viewModel: MyHistoryViewModel = viewModel(
-        factory = MyHistoryViewModelFactory(RetrofitClient.myHistoryRepository, userAccountId) // !!! Передаем userAccountId в фабрику
+    viewModel: MyHistoryIncomesViewModel = viewModel(
+        factory = MHIFactory(RetrofitClient.myHistoryRepository, userAccountId)
     )
 ) {
     val transactions by viewModel.transactions.collectAsState()

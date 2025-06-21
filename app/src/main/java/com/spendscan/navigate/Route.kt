@@ -9,6 +9,7 @@ object Route {
 
     object Incomes {
         const val route = "incomes"
+        const val graphRoute = "incomes_graph"
     }
 
     object Account {
@@ -23,8 +24,11 @@ object Route {
         const val route = "settings"
     }
 
-    object MyHistory {
-        const val route = "myHistory"
+    object MyHistoryExpenses {
+        const val route = "my_history_e"
+    }
+    object MyHistoryIncomes{
+        const val route = "my_history_i"
     }
 
     object AddAccount {

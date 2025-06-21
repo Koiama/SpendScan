@@ -23,8 +23,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.spendscan.R
 import com.spendscan.features.incomes.incomesList
+import com.spendscan.navigate.Route
 import com.spendscan.ui.components.FloatingAddButton
 import com.spendscan.ui.components.ListItem
 import com.spendscan.ui.components.TopBar
@@ -32,7 +34,7 @@ import com.spendscan.ui.components.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IncomesScreen(modifier: Modifier = Modifier) {
+fun IncomesScreen(modifier: Modifier = Modifier, navController: NavHostController) {
     Box {
         Scaffold(
             modifier = modifier,
@@ -40,7 +42,7 @@ fun IncomesScreen(modifier: Modifier = Modifier) {
                 TopBar(
                     title = "Доходы сегодня",
                     actionIcon = ImageVector.vectorResource(id = R.drawable.history_icon),
-                    onActionClick = { /*TODO*/ }
+                    onActionClick = { navController.navigate(Route.MyHistoryIncomes.route) }
                 )
             },
         ) { innerPadding ->

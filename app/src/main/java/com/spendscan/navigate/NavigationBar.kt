@@ -41,7 +41,7 @@ private fun getBottomNavItems(): List<BottomNavItem> {
             label = "Расходы"
         ),
         BottomNavItem(
-            route = Route.Incomes.route,
+            route =Route.Incomes.graphRoute,
             icon = ImageVector.vectorResource(id = R.drawable.incomes_icon),
             label = "Доходы"
         ),

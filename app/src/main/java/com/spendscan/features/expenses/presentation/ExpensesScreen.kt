@@ -40,7 +40,7 @@ fun ExpensesScreen(navController: NavController, modifier: Modifier = Modifier) 
                 TopBar(
                     title = "Расходы сегодня",
                     actionIcon = ImageVector.vectorResource(id = R.drawable.history_icon),
-                    onActionClick = { navController.navigate(Route.MyHistory.route) }
+                    onActionClick = { navController.navigate(Route.MyHistoryExpenses.route) }
                 )
             }
         ) { innerPadding ->
