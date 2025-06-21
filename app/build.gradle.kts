@@ -32,6 +32,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -39,6 +40,7 @@ android {
     kotlin {
         compilerOptions {
             freeCompilerArgs.add("-opt-in=kotlinx.serialization.InternalSerializationApi")
+
 
         }
     }
@@ -78,4 +80,5 @@ dependencies {
 
     // Kotlinx Serialization
     implementation(libs.kotlinx.serialization.json)
+    implementation (libs.threetenabp)
 }

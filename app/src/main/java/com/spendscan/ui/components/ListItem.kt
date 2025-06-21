@@ -98,9 +98,9 @@ fun ListItem(
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                secondaryText?.let {
+                if (secondaryText!=null && secondaryText!="") {
                     Text(
-                        text = it,
+                        text = secondaryText,
                         maxLines = 1,
                         lineHeight = 20.sp,
                         fontSize = 14.sp,
@@ -129,7 +129,8 @@ fun ListItem(
                         Text(
                             secondTrailingText,
                             maxLines = 1,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.align(Alignment.End)
                         )
                     }
                 }

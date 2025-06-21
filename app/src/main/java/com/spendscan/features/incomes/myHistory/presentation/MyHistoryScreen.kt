@@ -25,6 +25,8 @@ import com.spendscan.ui.components.TopBar
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.spendscan.features.incomes.myHistory.data.RetrofitClient
+import com.spendscan.features.incomes.myHistory.data.models.formatAmountSimple
+import com.spendscan.features.incomes.myHistory.data.models.toFormattedTime
 
 //Только история расходов, ручка period
 
@@ -85,17 +87,13 @@ fun MyHistoryScreen(
                 items(transactions) { transaction ->
                     ListItem(
                         onClick = { /*TODO*/ },
-                        primaryText = Column {
-                            Text(text = "${transaction.account.name}")
-                            Text(text = "${transaction.comment}")
-                        }.toString(),
-                        trailingText = "${transaction.amount} ",
+                        primaryText = "${transaction.category.name}",
+                        secondaryText ="${transaction.comment}" ,
                         leadingIconOrEmoji = "${transaction.category.emoji.orEmpty()}",
-                        secondaryText = Column {
-                            Text(text = "${transaction.amount}")
-                            Text(text = "${transaction.createdAt}")
-                        }.toString(),
+                        trailingText = formatAmountSimple(amountString = transaction.amount, currencyCode = transaction.account.currency),
+                        secondTrailingText = "${transaction.createdAt.toFormattedTime()}",
                         modifier = Modifier.fillMaxWidth()
+                            .height(69.dp)
                     )
                     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
                 }
