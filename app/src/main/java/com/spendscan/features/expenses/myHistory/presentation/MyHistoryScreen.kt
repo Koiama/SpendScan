@@ -24,10 +24,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.platform.LocalContext // <-- Импорт
 import com.spendscan.features.expenses.myHistory.data.RetrofitClient
 import com.spendscan.features.expenses.myHistory.data.models.formatAmountSimple
 import com.spendscan.features.expenses.myHistory.data.models.toFormattedTime
-
+import androidx.compose.ui.text.style.TextAlign
+import com.spendscan.features.expenses.myHistory.data.ConnectivityObserver
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,19 +37,24 @@ fun MyHistoryScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     userAccountId: String = "1", // Передаем accountId прямо здесь
-
-    viewModel: MyHistoryViewModel = viewModel(
-        factory = MyHistoryViewModelFactory(RetrofitClient.myHistoryRepository, userAccountId) // !!! Передаем userAccountId в фабрику
-    )
 ) {
+    val context = LocalContext.current
+
+    val viewModel: MyHistoryViewModel = viewModel(
+        factory = MyHistoryViewModelFactory(
+            repository = RetrofitClient.myHistoryRepository,
+            accountId = userAccountId,
+            connectivityObserver = ConnectivityObserver(context)
+        )
+    )
+
     val transactions by viewModel.transactions.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
     val startDate by viewModel.startDate.collectAsState()
     val endDate by viewModel.endDate.collectAsState()
     val totalExpenses by viewModel.totalExpenses.collectAsState()
-
-
+    val isOnline by viewModel.isOnline.collectAsState() // <-- Отслеживаем состояние сети
 
     Scaffold(
         modifier = modifier,
@@ -79,16 +86,27 @@ fun MyHistoryScreen(
             )
             HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
-            if (isLoading) {
-                CircularProgressIndicator(
+            // --- КОММУНИКАЦИЯ С ПОЛЬЗОВАТЕЛЕМ О СОСТОЯНИИ СЕТИ И ОШИБКАХ ---
+            if (!isOnline) {
+                Text(
+                    text = "Нет подключения к интернету. Проверьте соединение.",
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(8.dp),
+                    textAlign = TextAlign.Center
                 )
             } else if (error != null) {
                 Text(
-                    text = "Ошибка загрузки!",
+                    text = "Ошибка загрузки: $error", // Отображаем текст ошибки из ViewModel
                     color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    textAlign = TextAlign.Center
+                )
+            } else if (isLoading) {
+                CircularProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
@@ -99,7 +117,8 @@ fun MyHistoryScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
                 )
             } else {
                 LazyColumn() {

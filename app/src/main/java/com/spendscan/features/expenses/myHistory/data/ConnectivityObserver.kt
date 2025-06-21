@@ -1,5 +1,6 @@
 package com.spendscan.features.expenses.myHistory.data
 
+
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -11,16 +12,13 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-
 enum class NetworkStatus {
-    Available, // Сеть доступна
-    Unavailable, // Сеть недоступна
-    Losing, // Сеть теряется
-    Lost // Сеть потеряна
+    Available,
+    Unavailable,
+    Losing,
+    Lost
 }
 
-// ConnectivityObserver: Отслеживает изменения в состоянии сетевого подключения.
-// Предоставляет Flow<NetworkStatus> для наблюдения за статусом сети.
 class ConnectivityObserver(private val context: Context) {
 
     private val connectivityManager =
@@ -30,33 +28,31 @@ class ConnectivityObserver(private val context: Context) {
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                // Отправляем статус "Доступна"
                 launch { send(NetworkStatus.Available) }
             }
 
             override fun onLosing(network: Network, maxMsToLive: Int) {
                 super.onLosing(network, maxMsToLive)
-                // Отправляем статус "Теряется"
                 launch { send(NetworkStatus.Losing) }
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                // Отправляем статус "Потеряна"
                 launch { send(NetworkStatus.Lost) }
             }
 
             override fun onUnavailable() {
                 super.onUnavailable()
-                // Отправляем статус "Недоступна"
                 launch { send(NetworkStatus.Unavailable) }
             }
         }
 
+        val request = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+        connectivityManager.registerNetworkCallback(request, callback)
 
-        connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), callback)
-
-
+        // Инициализируем текущее состояние сети при первом запуске
         val initialStatus = if (isNetworkAvailable()) NetworkStatus.Available else NetworkStatus.Unavailable
         launch { send(initialStatus) }
 
@@ -66,7 +62,6 @@ class ConnectivityObserver(private val context: Context) {
         }
     }.distinctUntilChanged()
 
-    // Вспомогательная функция для проверки наличия активного соединения (для начального состояния)
     private fun isNetworkAvailable(): Boolean {
         val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         return capabilities != null &&
