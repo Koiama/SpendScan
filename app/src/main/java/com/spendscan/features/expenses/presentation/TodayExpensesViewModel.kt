@@ -1,4 +1,4 @@
-package com.spendscan.features.incomes.presentation
+package com.spendscan.features.expenses.presentation
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -15,11 +15,11 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.LocalTime
-import java.time.format.DateTimeParseException
-// TodayIncomeViewModel: ViewModel для отображения доходов за текущий день.
-// Он загружает транзакции, фильтрует их по типу "доход" и за сегодняшний день,
-// а также рассчитывает общую сумму доходов за этот период.
-class TodayIncomeViewModel(
+
+// TodayExpensesViewModel: ViewModel для отображения расходов за текущий день.
+// Он загружает транзакции, фильтрует их по типу "расход" и за сегодняшний день,
+// а также рассчитывает общую сумму расходов за этот период.
+class TodayExpensesViewModel(
     private val repository: MyHistoryRepository,
     private val accountId: String // accountId приходит через конструктор
 ) : ViewModel() {
@@ -33,13 +33,12 @@ class TodayIncomeViewModel(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
-    private val _totalIncome = MutableStateFlow("")
-    val totalIncome: StateFlow<String> = _totalIncome.asStateFlow()
+    private val _totalExpenses = MutableStateFlow("") // Общая сумма расходов за сегодня с валютой
+    val totalExpenses: StateFlow<String> = _totalExpenses.asStateFlow()
 
     init {
         loadTransactionsForToday()
     }
-
 
     private fun loadTransactionsForToday() {
         viewModelScope.launch {
@@ -63,31 +62,30 @@ class TodayIncomeViewModel(
                 val formattedEndDate = Instant.ofEpochMilli(endOfTodayMillis)
                     .atZone(ZoneOffset.UTC)
                     .toLocalDate()
-                    .atTime(LocalTime.MAX) // Убедимся, что захватываем весь день
+                    .atTime(LocalTime.MAX)
                     .format(DateTimeFormatter.ISO_LOCAL_DATE)
 
-                Log.d("SpendScanApp", "Запрос транзакций для Account ID: $accountId, Start Date: $formattedStartDate, End Date: $formattedEndDate (Today)")
+                Log.d("SpendScanApp", "Запрос транзакций для Account ID: $accountId, Start Date: $formattedStartDate, End Date: $formattedEndDate (Today Expenses)")
 
                 val fetchedTransactions =
                     repository.getTransactionsByPeriod(accountId, formattedStartDate, formattedEndDate)
 
-                // Фильтруем только доходы
-                val onlyIncome = fetchedTransactions
+                val onlyExpenses = fetchedTransactions
                     .filter { transactionDto ->
-                        transactionDto.category.isIncome == true
+                        !(transactionDto.category.isIncome ?: true)
                     }
                     .sortedByDescending { transactionDto ->
                         try {
                             Instant.parse(transactionDto.createdAt)
-                        } catch (e: DateTimeParseException) {
+                        } catch (e: Exception) {
                             Log.e("SpendScanApp", "ОШИБКА СОРТИРОВКИ: Не удалось разобрать createdAt '${transactionDto.createdAt}'. Используется Instant.MIN.", e)
                             Instant.MIN
                         }
                     }
 
-                _transactions.value = onlyIncome
+                _transactions.value = onlyExpenses
 
-                // Расчет общей суммы доходов с учетом валюты
+                // Расчет общей суммы расходов с учетом валюты
                 var currentTotalAmount = BigDecimal.ZERO
                 var currency: String? = null
 
@@ -97,18 +95,18 @@ class TodayIncomeViewModel(
                         if (currency == null) {
                             currency = transactionDto.account.currency
                         } else if (currency != transactionDto.account.currency) {
-                            Log.w("SpendScanApp", "Транзакции доходов имеют разные валюты за сегодня. Сумма может быть неточной.")
+                            Log.w("SpendScanApp", "Транзакции расходов имеют разные валюты за сегодня. Сумма может быть неточной.")
                         }
                     } catch (e: NumberFormatException) {
                         Log.e("SpendScanApp", "Ошибка при разборе суммы '${transactionDto.amount}'. Транзакция пропущена.", e)
                     }
                 }
 
-                _totalIncome.value = "$currentTotalAmount ${currency ?: ""}"
-                Log.d("SpendScanApp", "TodayIncomeViewModel: Транзакции доходов за сегодня загружены. Количество: ${_transactions.value.size}")
+                _totalExpenses.value = "$currentTotalAmount ${currency ?: ""}"
+                Log.d("SpendScanApp", "TodayExpensesViewModel: Транзакции расходов за сегодня загружены. Количество: ${_transactions.value.size}")
             } catch (e: Exception) {
-                _error.value = "Ошибка загрузки доходов за сегодня: ${e.message ?: "Неизвестная ошибка"}"
-                Log.e("SpendScanApp", "TodayIncomeViewModel: Ошибка при загрузке доходов за сегодня: ${e.message}", e)
+                _error.value = "Ошибка загрузки расходов за сегодня: ${e.message ?: "Неизвестная ошибка"}"
+                Log.e("SpendScanApp", "TodayExpensesViewModel: Ошибка при загрузке расходов за сегодня: ${e.message}", e)
             } finally {
                 _isLoading.value = false
             }

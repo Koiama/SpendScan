@@ -1,13 +1,13 @@
 package com.spendscan.features.account.domain.models
 
-import com.spendscan.core.data.models.AccountBriefDto
+import com.spendscan.features.expenses.myHistory.data.models.AccountState
 
 data class History(
     val id: Int,
     val accountId: Int,
     val changeType: String,
-    val previousState: AccountBriefDto,
-    val newState: AccountBriefDto,
+    val previousState: AccountState,
+    val newState: AccountState,
     val changeTimestamp: String,
     val createdAt: String
 )
