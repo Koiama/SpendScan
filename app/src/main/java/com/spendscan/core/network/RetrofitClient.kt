@@ -9,6 +9,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
@@ -46,7 +47,7 @@ object RetrofitClient {
     val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     // 4. Создание экземпляра нашего API-сервиса, будет создан при первом обращении

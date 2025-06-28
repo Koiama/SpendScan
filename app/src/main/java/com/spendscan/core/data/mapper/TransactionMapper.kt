@@ -13,7 +13,7 @@ fun TransactionDto.toDomain(): Transaction {
         id = id,
         account = account.toDomain(),
         category = category.toDomain(),
-        amount = amount,
+        amount = this.amount.toDouble(),
         date = parseDateTime(transactionDate),
         comment = comment
     )

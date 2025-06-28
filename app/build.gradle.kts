@@ -83,4 +83,5 @@ dependencies {
     // Kotlinx Serialization
     implementation(libs.kotlinx.serialization.json)
     implementation (libs.threetenabp)
+    implementation (libs.converter.gson)
 }

@@ -61,7 +61,6 @@ fun SpendScanNavGraph(navController: NavHostController, modifier: Modifier = Mod
             )
         }
 
-        // Other single screens
         composable(Route.Account.route) { AccountScreen() }
         composable(Route.Article.route) { ArticleScreen() }
         composable(Route.Settings.route) { SettingScreen() }

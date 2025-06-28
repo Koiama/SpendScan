@@ -36,12 +36,12 @@ data class BottomNavItem(
 private fun getBottomNavItems(): List<BottomNavItem> {
     return listOf(
         BottomNavItem(
-            route = Route.Expenses.graphRoute,
+            route = Route.Expenses.route,
             icon = ImageVector.vectorResource(id = R.drawable.expenses_icon),
             label = "Расходы"
         ),
         BottomNavItem(
-            route =Route.Incomes.graphRoute,
+            route =Route.Incomes.route,
             icon = ImageVector.vectorResource(id = R.drawable.incomes_icon),
             label = "Доходы"
         ),
@@ -92,14 +92,11 @@ fun SpendScanBottomBar(navController: NavHostController) {
                 selected = selected,
                 onClick = {
                     navController.navigate(item.route) {
-                        // Поп до начальной точки графа, чтобы избежать нескольких копий одного и того же destination
                         popUpTo(navController.graph.startDestinationId) {
                             saveState =
-                                true // Сохранить состояние Composable для предыдущих экранов
+                                true
                         }
-                        // Избежать нескольких копий одного и того же destination, когда выбрана одна и та же иконка
                         launchSingleTop = true
-                        // Восстановить состояние при повторном выборе (если popUpTo(saveState=true))
                         restoreState = true
                     }
                 },

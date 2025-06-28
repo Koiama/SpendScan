@@ -13,7 +13,7 @@ data class TransactionDto (
     val id: Int,
     val account: AccountBriefDto,
     val category: CategoryDto,
-    val amount: Double,
+    val amount: String,
     val transactionDate: String,
     val comment: String? = null,
     val createdAt: String,
