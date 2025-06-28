@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.spendscan.R
 import com.spendscan.features.settings.data.settingsList
-import com.spendscan.ui.components.ListItem
-import com.spendscan.ui.components.TopBar
+import com.spendscan.core.ui.components.ListItem
+import com.spendscan.core.ui.components.TopBar
 
 @Composable
 fun SettingScreen(modifier: Modifier = Modifier) {
