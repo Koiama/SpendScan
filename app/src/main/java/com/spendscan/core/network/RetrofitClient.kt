@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
 
 
-    private const val AUTH_TOKEN = "U1lQnP6eu0Q9VrkjYdeOJyr2" //Так лучше не хардкодить
+    private const val API_KEY = "U1lQnP6eu0Q9VrkjYdeOJyr2" //Так лучше не хардкодить
 
     // 1. Настройка JSON-парсера (Kotlinx Serialization)
     private val json = Json {
@@ -29,7 +29,7 @@ object RetrofitClient {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private val authInterceptor = AuthInterceptor(AUTH_TOKEN)
+    private val authInterceptor = AuthInterceptor(API_KEY)
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)

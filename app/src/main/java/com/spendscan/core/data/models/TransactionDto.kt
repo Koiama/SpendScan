@@ -15,7 +15,7 @@ data class TransactionDto (
     val category: CategoryDto,
     val amount: Double,
     val transactionDate: String,
-    val comment: String?,
+    val comment: String? = null,
     val createdAt: String,
     val updatedAt: String
 )
