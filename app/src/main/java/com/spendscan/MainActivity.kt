@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.spendscan.navigate.SpendScanBottomBar
 import com.spendscan.navigate.SpendScanNavGraph
-import com.spendscan.core.ui.theme.SpendScanTheme
+import com.spendscan.ui.theme.SpendScanTheme
 
 
 class MainActivity : ComponentActivity() {

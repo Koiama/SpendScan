@@ -3,17 +3,8 @@ package com.spendscan.navigate
 // Определяем объекты для каждого маршрута
 object Route {
     object Expenses {
-        const val route = "expenses_screen"
-        const val graphRoute = "expenses_graph"
-    }
-
-    object MyHistory {
-        const val route = "transaction_list_screen?isIncome={isIncome}&title={title}"
-        fun createRoute(isIncome: Boolean? = null, title: String): String {
-            val isIncomeParam = isIncome?.toString() ?: "null"
-            val encodedTitle = java.net.URLEncoder.encode(title, "UTF-8")
-            return "transaction_list_screen?isIncome=$isIncomeParam&title=$encodedTitle"
-        }
+        const val route = "expenses_screen" // Конкретный экран "Расходы"
+        const val graphRoute = "expenses_graph" // Маршрут для всего графа "Расходы"
     }
 
     object Incomes {
@@ -33,7 +24,12 @@ object Route {
         const val route = "settings"
     }
 
-
+    object MyHistoryExpenses {
+        const val route = "my_history_e"
+    }
+    object MyHistoryIncomes{
+        const val route = "my_history_i"
+    }
 
     object AddAccount {
         const val route = "addAccount"

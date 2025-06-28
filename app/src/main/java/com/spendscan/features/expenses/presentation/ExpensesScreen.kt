@@ -1,6 +1,5 @@
 package com.spendscan.features.expenses.presentation
 
-import ExpensesViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,45 +26,29 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.spendscan.R
-import com.spendscan.core.network.RetrofitClient
+import com.spendscan.features.expenses.expensesList
+import com.spendscan.features.expenses.myHistory.data.RetrofitClient
 import com.spendscan.navigate.Route
-import com.spendscan.core.ui.components.FloatingAddButton
-import com.spendscan.core.ui.components.ListItem
-import com.spendscan.core.ui.components.TopBar
+import com.spendscan.ui.components.FloatingAddButton
+import com.spendscan.ui.components.ListItem
+import com.spendscan.ui.components.TopBar
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import com.spendscan.core.data.repository.TransactionRepositoryImpl
-import com.spendscan.core.domain.repository.TransactionRepository
-import com.spendscan.core.network.ConnectivityObserver
-import com.spendscan.features.expenses.useCase.GetTodayExpensesUseCase
 
 @Composable
 fun ExpensesScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    accountId: Int = 1,
-) {
-    val context = LocalContext.current
-
-    val apiService = remember { RetrofitClient.transactionApiService }
-    val repository: TransactionRepository = remember { TransactionRepositoryImpl(apiService) }
-    val connectivityObserver = remember { ConnectivityObserver(context) }
-    val getTodayExpensesUseCase = remember { GetTodayExpensesUseCase(repository) }
-
-    val viewModel: ExpensesViewModel = viewModel(
-        factory = ExpensesViewModelFactory(
-            getTodayExpensesUseCase = getTodayExpensesUseCase,
-            accountId = accountId,
-            connectivityObserver = connectivityObserver
-        )
+    accountId: String = "1",
+    viewModel: TodayExpensesViewModel = viewModel(
+        factory = TodayExpensesViewModelFactory(RetrofitClient.myHistoryRepository, accountId)
     )
 
+) {
+    // Собираем состояния из ViewModel для отображения в UI
     val expenses by viewModel.transactions.collectAsState()
     val totalExpenses by viewModel.totalExpenses.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
-    val isOnline by viewModel.isOnline.collectAsState()
 
     Box {
         Scaffold(
@@ -75,11 +58,12 @@ fun ExpensesScreen(
                 TopBar(
                     title = "Расходы сегодня",
                     actionIcon = ImageVector.vectorResource(id = R.drawable.history_icon),
-                    onActionClick = { navController.navigate(Route.MyHistory.createRoute(isIncome = false, title = "Мои расходы")) }
+                    onActionClick = { navController.navigate(Route.MyHistoryExpenses.route) }
                 )
             }
         ) { innerPadding ->
             Column(modifier = Modifier.padding(top = innerPadding.calculateTopPadding())) {
+                // Строка "Всего"
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -109,12 +93,9 @@ fun ExpensesScreen(
                 }
                 HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
+
+                // Обработка различных состояний данных: загрузка, ошибка, пустой список, или отображение данных
                 when {
-                    !isOnline -> {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text("Нет подключения к интернету. Проверьте соединение.")
-                        }
-                    }
                     isLoading -> {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text("Загрузка расходов...")
@@ -131,6 +112,7 @@ fun ExpensesScreen(
                         }
                     }
                     else -> {
+                        // LazyColumn для отображения списка расходов из ViewModel
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize()
