@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit.kotlinx.serialization.converter)
+    implementation (libs.converter.gson)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)

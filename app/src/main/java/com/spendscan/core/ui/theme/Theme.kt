@@ -26,14 +26,19 @@ private val LightColorScheme = lightColorScheme(
 fun SpendScanTheme(
     content: @Composable () -> Unit
 ) {
+    val colorScheme = LightColorScheme // Используйте вашу LightColorScheme
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars
-            window.statusBarColor = LightColorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.primary.toArgb()
+
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+
         }
     }
+
 
     MaterialTheme(
         colorScheme = LightColorScheme,

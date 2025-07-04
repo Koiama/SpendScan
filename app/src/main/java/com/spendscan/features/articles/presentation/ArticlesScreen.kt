@@ -6,42 +6,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.spendscan.features.expenses.expensesList
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.spendscan.core.ui.components.ListItem
 import com.spendscan.core.ui.components.SearchTextField
 import com.spendscan.core.ui.components.TopBar
 import com.spendscan.core.ui.theme.SpendScanTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
+
 
 @Composable
-fun ArticleScreen(modifier: Modifier = Modifier) {
-    // Состояние для текста в поле поиска
-    var searchText by remember { mutableStateOf("") }
-
-    // Состояние для хранения отфильтрованного списка РАСХОДОВ
-    var filteredExpensesList by remember { mutableStateOf(expensesList) }
-
-    val onSearchPerformed: (String) -> Unit = { query ->
-        if (query.isBlank()) {
-            // Если строка поиска пустая, показываем весь список расходов
-            filteredExpensesList = expensesList
-        } else {
-            // Иначе, фильтруем список расходов ТОЛЬКО ПО НАЗВАНИЮ ТРАТЫ (title)
-            filteredExpensesList = expensesList.filter { expense ->
-                expense.title.contains(query, ignoreCase = true)
-            }
-        }
-    }
+fun ArticleScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ArticleViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         modifier = modifier,
@@ -52,38 +42,94 @@ fun ArticleScreen(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .padding(top = innerPadding.calculateTopPadding())
+                .fillMaxSize()
         ) {
             SearchTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = searchText,
+                modifier = Modifier.fillMaxWidth(),
+                value = uiState.searchText,
                 onValueChange = { newText ->
-                    searchText = newText
-                    onSearchPerformed(newText) // Запускаем фильтрацию при каждом изменении текста
+                    viewModel.onSearchTextChange(newText)
                 },
-                onSearch = onSearchPerformed, // Запускаем фильтрацию при нажатии Enter
+                onSearch = { query ->
+                    viewModel.onSearchTextChange(query)
+                },
                 placeholder = "Найти статью"
             )
 
-
             HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                items(filteredExpensesList) { expense ->
-                    ListItem(
-                        onClick = { /*TODO*/
-                        },
-                        leadingIconOrEmoji = expense.iconTag,
-                        primaryText = expense.title,
-                        secondaryText = null,
-                        trailingText = null,
-                        trailingIcon = null,
-                    )
-
-                    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+            when {
+                uiState.isLoading -> {
+                    // Если идет загрузка, показываем индикатор прогресса
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator()
+                        Text(
+                            text = "Загрузка статей...",
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+                    }
+                }
+                uiState.error != null -> {
+                    // Если произошла ошибка, показываем сообщение об ошибке
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Ошибка: ${uiState.error}",
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+                uiState.filteredArticles.isEmpty() && !uiState.isLoading && uiState.error == null && uiState.searchText.isNotBlank() -> {
+                    // Если список пуст после фильтрации и есть текст поиска
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Статьи по запросу '${uiState.searchText}' не найдены.",
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+                uiState.filteredArticles.isEmpty() && !uiState.isLoading && uiState.error == null && uiState.searchText.isBlank() -> {
+                    // Если список пуст изначально (нет загруженных статей)
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Список статей пуст.",
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+                else -> {
+                    // В остальных случаях (когда есть данные), отображаем список
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(uiState.filteredArticles) { article ->
+                            ListItem(
+                                onClick = { /*TODO: Обработка клика по статье*/ },
+                                leadingIconOrEmoji = article.emoji,
+                                primaryText = article.name,
+                                secondaryText = null,
+                                trailingText = null,
+                                trailingIcon = null,
+                            )
+                            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+                        }
+                    }
                 }
             }
         }
