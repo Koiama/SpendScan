@@ -8,7 +8,6 @@ import com.spendscan.features.incomes.useCase.GetTodayIncomeUseCase
 
 class TodayIncomeViewModelFactory(
     private val getTodayIncomeUseCase: GetTodayIncomeUseCase,
-    private val accountId: Int,
     private val connectivityObserver: ConnectivityObserver
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -16,7 +15,6 @@ class TodayIncomeViewModelFactory(
         if (modelClass.isAssignableFrom(TodayIncomeViewModel::class.java)) {
             return TodayIncomeViewModel(
                 getTodayIncomeUseCase = getTodayIncomeUseCase,
-                accountId = accountId,
                 connectivityObserver = connectivityObserver
             ) as T
         }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -39,12 +40,12 @@ import com.spendscan.core.data.repository.TransactionRepositoryImpl
 import com.spendscan.core.domain.repository.TransactionRepository
 import com.spendscan.core.network.ConnectivityObserver
 import com.spendscan.features.expenses.useCase.GetTodayExpensesUseCase
+import com.spendscan.core.domain.managers.GlobalCurrentAccountManager
 
 @Composable
 fun ExpensesScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    accountId: Int = 1,
 ) {
     val context = LocalContext.current
 
@@ -53,18 +54,23 @@ fun ExpensesScreen(
     val connectivityObserver = remember { ConnectivityObserver(context) }
     val getTodayExpensesUseCase = remember { GetTodayExpensesUseCase(repository) }
 
+    // Получаем ID текущего аккаунта из менеджера
+    val currentAccountId by GlobalCurrentAccountManager.instance.currentAccountId.collectAsState()
+    val isAccountLoading by GlobalCurrentAccountManager.instance.isAccountLoading.collectAsState()
+    val accountLoadError by GlobalCurrentAccountManager.instance.accountLoadError.collectAsState()
+
+    // ViewModel будет инициализирован только после получения accountId
     val viewModel: ExpensesViewModel = viewModel(
         factory = ExpensesViewModelFactory(
             getTodayExpensesUseCase = getTodayExpensesUseCase,
-            accountId = accountId,
             connectivityObserver = connectivityObserver
         )
     )
 
     val expenses by viewModel.transactions.collectAsState()
     val totalExpenses by viewModel.totalExpenses.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val error by viewModel.error.collectAsState()
+    val isLoadingExpenses by viewModel.isLoading.collectAsState()
+    val errorExpenses by viewModel.error.collectAsState()
     val isOnline by viewModel.isOnline.collectAsState()
 
     Box {
@@ -75,7 +81,11 @@ fun ExpensesScreen(
                 TopBar(
                     title = "Расходы сегодня",
                     actionIcon = ImageVector.vectorResource(id = R.drawable.history_icon),
-                    onActionClick = { navController.navigate(Route.MyHistory.createRoute(isIncome = false, title = "Мои расходы")) }
+                    onActionClick = {
+                        val accountIdToPass = GlobalCurrentAccountManager.instance.currentAccountId.value
+                        val safeAccountId = accountIdToPass ?: 1
+                        navController.navigate(Route.MyHistory.createRoute(isIncome = false, title = "Мои расходы", userAccountId = safeAccountId))
+                    }
                 )
             }
         ) { innerPadding ->
@@ -110,19 +120,36 @@ fun ExpensesScreen(
                 HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
                 when {
+                    isAccountLoading -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator()
+                            Text("Загрузка аккаунта...")
+                        }
+                    }
+                    accountLoadError != null -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text("Ошибка загрузки аккаунта: ${accountLoadError!!}")
+                        }
+                    }
+                    currentAccountId == null -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text("Ожидание ID аккаунта...")
+                        }
+                    }
                     !isOnline -> {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text("Нет подключения к интернету. Проверьте соединение.")
                         }
                     }
-                    isLoading -> {
+                    isLoadingExpenses -> {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator()
                             Text("Загрузка расходов...")
                         }
                     }
-                    error != null -> {
+                    errorExpenses != null -> {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text("Ошибка: ${error!!}")
+                            Text("Ошибка: ${errorExpenses!!}")
                         }
                     }
                     expenses.isEmpty() -> {

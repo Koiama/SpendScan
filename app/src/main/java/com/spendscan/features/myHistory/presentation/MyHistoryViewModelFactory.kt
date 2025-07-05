@@ -9,7 +9,6 @@ import com.spendscan.features.myHistory.useCase.GetTransactionsByTypeUseCase
 // TransactionHistoryViewModelFactory: Фабрика для создания TransactionHistoryViewModel.
 class MyHistoryViewModelFactory(
     private val repository: TransactionRepository,
-    private val accountId: Int,
     private val isIncome: Boolean? = null,
     private val connectivityObserver: ConnectivityObserver
 ) : ViewModelProvider.Factory {
@@ -19,7 +18,6 @@ class MyHistoryViewModelFactory(
             val getTransactionsByTypeUseCase = GetTransactionsByTypeUseCase(repository)
             return MyHistoryViewModel(
                 getTransactionsByTypeUseCase,
-                accountId,
                 isIncome,
                 connectivityObserver
             ) as T

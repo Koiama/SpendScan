@@ -8,7 +8,6 @@ import com.spendscan.features.expenses.useCase.GetTodayExpensesUseCase
 
 class ExpensesViewModelFactory(
     private val getTodayExpensesUseCase: GetTodayExpensesUseCase,
-    private val accountId: Int,
     private val connectivityObserver: ConnectivityObserver
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -16,7 +15,6 @@ class ExpensesViewModelFactory(
         if (modelClass.isAssignableFrom(ExpensesViewModel::class.java)) {
             return ExpensesViewModel(
                 getTodayExpensesUseCase = getTodayExpensesUseCase,
-                accountId = accountId,
                 connectivityObserver = connectivityObserver
             ) as T
         }

@@ -9,7 +9,7 @@ object Route {
 
     object MyHistory {
         const val route = "transaction_list_screen?isIncome={isIncome}&title={title}"
-        fun createRoute(isIncome: Boolean? = null, title: String): String {
+        fun createRoute(isIncome: Boolean? = null, title: String, userAccountId: Int): String {
             val isIncomeParam = isIncome?.toString() ?: "null"
             val encodedTitle = java.net.URLEncoder.encode(title, "UTF-8")
             return "transaction_list_screen?isIncome=$isIncomeParam&title=$encodedTitle"
@@ -35,7 +35,7 @@ object Route {
 
 
 
-    object AddAccount {
-        const val route = "addAccount"
+    object  EditAccount {
+        const val route = "editAccount"
     }
 }

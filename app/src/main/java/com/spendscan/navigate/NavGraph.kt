@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.NavType
 import com.spendscan.features.myHistory.presentation.TransactionListScreen
 import com.spendscan.features.account.presentation.AccountScreen
+import com.spendscan.features.account.presentation.EditAccountScreen
 import com.spendscan.features.categories.presentation.CategoryScreen
 import com.spendscan.features.expenses.presentation.ExpensesScreen
 import com.spendscan.features.incomes.presentation.IncomesScreen
@@ -60,8 +61,19 @@ fun SpendScanNavGraph(navController: NavHostController, modifier: Modifier = Mod
                 title = decodedTitle
             )
         }
+        composable(Route.Account.route) {
+            AccountScreen(
+                onNavigateToEditAccount = { navController.navigate(Route.EditAccount.route) }
+            )
+        }
 
-        composable(Route.Account.route) { AccountScreen() }
+        composable(Route.EditAccount.route) {
+            EditAccountScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+
         composable(Route.Category.route) {  CategoryScreen()  }
         composable(Route.Settings.route) { SettingScreen() }
     }

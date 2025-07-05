@@ -12,17 +12,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.jakewharton.threetenabp.AndroidThreeTen
+import com.spendscan.core.domain.managers.GlobalCurrentAccountManager
 import com.spendscan.navigate.SpendScanBottomBar
 import com.spendscan.navigate.SpendScanNavGraph
 import com.spendscan.core.ui.theme.SpendScanTheme
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            GlobalCurrentAccountManager.instance.loadDefaultAccount()
+        }
         enableEdgeToEdge()
         setContent {
             SpendScanTheme {

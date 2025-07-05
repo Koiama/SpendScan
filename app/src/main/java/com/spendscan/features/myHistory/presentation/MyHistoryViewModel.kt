@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.spendscan.core.common.Result
+import com.spendscan.core.domain.managers.GlobalCurrentAccountManager
 import com.spendscan.core.domain.models.Transaction
 import com.spendscan.core.network.ConnectivityObserver
 import com.spendscan.core.network.NetworkStatus
@@ -11,6 +12,7 @@ import com.spendscan.features.myHistory.useCase.GetTransactionsByTypeUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -20,7 +22,6 @@ import java.time.LocalDate
  */
 class MyHistoryViewModel(
     private val getTransactionsByTypeUseCase: GetTransactionsByTypeUseCase,
-    private val accountId: Int,
     private val isIncome: Boolean? = null,
     private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
@@ -48,31 +49,69 @@ class MyHistoryViewModel(
     private val _isOnline = MutableStateFlow(true)
     val isOnline: StateFlow<Boolean> = _isOnline.asStateFlow()
 
+    private val _currentAccountId = MutableStateFlow<Int?>(null)
+
     init {
         // Запускаем наблюдение за состоянием сети
         viewModelScope.launch {
             connectivityObserver.observe().collect { status ->
                 _isOnline.value = (status == NetworkStatus.Available || status == NetworkStatus.Losing)
-                Log.d("SpendScanApp", "Network Status: $status, isOnline: ${_isOnline.value}")
+                // Если сеть восстановилась И была ошибка, попробуем перезагрузить
                 if (_isOnline.value && _error.value != null && _error.value!!.contains("Сетевая ошибка")) {
                     Log.d("SpendScanApp", "Network re-established, attempting to reload transactions.")
                     loadTransactions()
                 }
             }
         }
-        loadTransactions()
+
+        // Запускаем наблюдение за ID текущего аккаунта из GlobalCurrentAccountManager
+        // Используем collectLatest, чтобы отменить предыдущие запросы, если ID быстро меняется
+        viewModelScope.launch {
+            GlobalCurrentAccountManager.instance.currentAccountId.collectLatest { id ->
+                _currentAccountId.value = id
+                if (id != null) {
+                    Log.d("MyHistoryViewModel", "Account ID received: $id. Loading transactions.")
+                    loadTransactions() // Загружаем транзакции, как только ID аккаунта станет доступен
+                } else {
+                    Log.d(
+                        "MyHistoryViewModel",
+                        "Account ID is null. Waiting for account to be loaded."
+                    )
+                    _transactions.value = emptyList() // Очищаем список, если ID стал null
+                    _totalAmount.value = 0.0
+                    _totalFormatted.value = ""
+                    _isLoading.value = false
+                    _error.value = "Аккаунт не выбран или не загружен."
+                }
+            }
+        }
     }
 
+    // <-- ЭТА ФУНКЦИЯ ТЕПЕРЬ НАХОДИТСЯ НА УРОВНЕ КЛАССА MyHistoryViewModel
     fun setDateRange(newStartDate: LocalDate, newEndDate: LocalDate) {
         _startDate.value = newStartDate
         _endDate.value = newEndDate
-        loadTransactions()
+        loadTransactions() // Перезагружаем транзакции с новой датой
     }
 
     /**
      * Загружает и отображает транзакции за текущий период и тип.
+     * <-- ЭТА ФУНКЦИЯ ТЕПЕРЬ ТАКЖЕ НАХОДИТСЯ НА УРОВНЕ КЛАССА MyHistoryViewModel
+     * (В прошлой версии у вас была одна 'loadTransactions()'
+     * и внутри неё вложенная 'loadTransactions()'. Мы их объединили.)
      */
     fun loadTransactions() {
+        val accountId = _currentAccountId.value // Получаем текущий accountId из StateFlow
+        if (accountId == null) {
+            Log.w(
+                "MyHistoryViewModel",
+                "loadTransactions() called but current account ID is null. Skipping load."
+            )
+            _isLoading.value = false
+            _error.value = "Ошибка: ID аккаунта не загружен."
+            return // Не загружаем, если ID аккаунта еще не установлен
+        }
+
         _isLoading.value = true
         _error.value = null // Сбрасываем ошибку перед новой попыткой
 
@@ -95,19 +134,33 @@ class MyHistoryViewModel(
                     val transactionData = result.data
                     _transactions.value = transactionData.expenses
                     _totalAmount.value = transactionData.amount
-                    _totalFormatted.value = "${transactionData.amount} ${transactionData.currency}"
+                    _totalFormatted.value =
+                        "${transactionData.amount} ${transactionData.currency}"
                     _isLoading.value = false
-                    Log.d("SpendScanApp", "TransactionHistoryViewModel: Transactions successfully loaded and calculated.")
+                    Log.d(
+                        "SpendScanApp",
+                        "TransactionHistoryViewModel: Transactions successfully loaded and calculated."
+                    )
                 }
+
                 is Result.Error -> {
                     _error.value = "Ошибка ${result.code}: ${result.message}"
                     _isLoading.value = false
-                    Log.e("SpendScanApp", "TransactionHistoryViewModel: Error loading transactions: ${result.message}")
+                    Log.e(
+                        "SpendScanApp",
+                        "TransactionHistoryViewModel: Error loading transactions: ${result.message}"
+                    )
                 }
+
                 is Result.Exception -> {
-                    _error.value = "Исключение: ${result.error.localizedMessage ?: "Неизвестная ошибка"}"
+                    _error.value =
+                        "Исключение: ${result.error.localizedMessage ?: "Неизвестная ошибка"}"
                     _isLoading.value = false
-                    Log.e("SpendScanApp", "TransactionHistoryViewModel: Exception loading transactions: ${result.error.message}", result.error)
+                    Log.e(
+                        "SpendScanApp",
+                        "TransactionHistoryViewModel: Exception loading transactions: ${result.error.message}",
+                        result.error
+                    )
                 }
             }
         }

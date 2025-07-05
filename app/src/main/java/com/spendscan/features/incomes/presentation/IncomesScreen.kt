@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,6 +41,7 @@ import com.spendscan.core.ui.components.ListItem
 import com.spendscan.core.ui.components.TopBar
 import com.spendscan.features.incomes.useCase.GetTodayIncomeUseCase
 import com.spendscan.navigate.Route
+import com.spendscan.core.domain.managers.GlobalCurrentAccountManager
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,7 +49,6 @@ import com.spendscan.navigate.Route
 fun IncomesScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    accountId: Int = 1,
 ) {
     val context = LocalContext.current
 
@@ -55,10 +57,14 @@ fun IncomesScreen(
     val connectivityObserver = remember { ConnectivityObserver(context) }
     val getTodayIncomeUseCase = remember { GetTodayIncomeUseCase(repository) }
 
+    val isAccountLoading by GlobalCurrentAccountManager.instance.isAccountLoading.collectAsState()
+    val accountLoadError by GlobalCurrentAccountManager.instance.accountLoadError.collectAsState()
+    val currentAccountId by GlobalCurrentAccountManager.instance.currentAccountId.collectAsState()
+    val currentAccountName by GlobalCurrentAccountManager.instance.currentAccountName.collectAsState()
+
     val viewModel: TodayIncomeViewModel = viewModel(
         factory = TodayIncomeViewModelFactory(
             getTodayIncomeUseCase = getTodayIncomeUseCase,
-            accountId = accountId,
             connectivityObserver = connectivityObserver
         )
     )
@@ -69,14 +75,28 @@ fun IncomesScreen(
     val error by viewModel.error.collectAsState()
     val isOnline by viewModel.isOnline.collectAsState()
 
+    val screenTitle = remember(currentAccountName) {
+        currentAccountName?.let { name ->
+            if (name.isNotEmpty()) "$name - Доходы сегодня" else "Доходы сегодня"
+        } ?: "Доходы сегодня"
+    }
+
     Box {
         Scaffold(
             modifier = modifier,
             topBar = {
                 TopBar(
-                    title = "Доходы сегодня",
+                    title = screenTitle,
                     actionIcon = ImageVector.vectorResource(id = R.drawable.history_icon),
-                    onActionClick = { navController.navigate(Route.MyHistory.createRoute(isIncome = true, title = "Мои доходы")) }
+                    onActionClick = {
+                        navController.navigate(
+                            Route.MyHistory.createRoute(
+                                isIncome = true,
+                                title = "Мои доходы",
+                                userAccountId = 23
+                            )
+                        )
+                    }
                 )
             },
         ) { innerPadding ->
@@ -84,7 +104,6 @@ fun IncomesScreen(
                 modifier = Modifier
                     .padding(top = innerPadding.calculateTopPadding())
             ) {
-                // Строка "Всего"
                 Row(
                     modifier = Modifier
                         .height(56.dp)
@@ -115,12 +134,41 @@ fun IncomesScreen(
                 HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
                 when {
+                    isAccountLoading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                            Text("Загрузка данных аккаунта...", modifier = Modifier.padding(top = 70.dp), textAlign = TextAlign.Center)
+                        }
+                    }
+                    accountLoadError != null -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Ошибка загрузки аккаунта: ${accountLoadError!!}",
+                                color = MaterialTheme.colorScheme.error,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                    currentAccountId == null -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("Аккаунт не выбран или не загружен. Выберите аккаунт.", textAlign = TextAlign.Center)
+                        }
+                    }
                     !isOnline -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Нет подключения к интернету. Проверьте соединение.")
+                            Text("Нет подключения к интернету. Проверьте соединение.", textAlign = TextAlign.Center)
                         }
                     }
 
@@ -129,7 +177,8 @@ fun IncomesScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Загрузка доходов...")
+                            CircularProgressIndicator()
+                            Text("Загрузка доходов...", modifier = Modifier.padding(top = 70.dp), textAlign = TextAlign.Center)
                         }
                     }
 
@@ -138,7 +187,11 @@ fun IncomesScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Ошибка: ${error!!}")
+                            Text(
+                                "Ошибка: ${error!!}",
+                                color = MaterialTheme.colorScheme.error,
+                                textAlign = TextAlign.Center
+                            )
                         }
                     }
 
@@ -147,7 +200,7 @@ fun IncomesScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Нет доходов за сегодня.")
+                            Text("Нет доходов за сегодня.", textAlign = TextAlign.Center)
                         }
                     }
 

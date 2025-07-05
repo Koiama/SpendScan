@@ -7,6 +7,7 @@ import com.spendscan.features.expenses.domain.models.TodayExpensesData
 import java.time.LocalDate
 import kotlin.math.abs
 
+
 class GetTodayExpensesUseCase(
     private val repository: TransactionRepository
 ) {

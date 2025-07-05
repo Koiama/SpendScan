@@ -1,5 +1,6 @@
 package com.spendscan.core.network
 
+import com.spendscan.core.data.api.AccountApiService
 import com.spendscan.core.data.api.CategoriesApiService
 import com.spendscan.core.data.api.TransactionApiService
 import com.spendscan.core.data.repository.TransactionRepositoryImpl
@@ -52,5 +53,9 @@ object RetrofitClient {
 
     val categoriesApiService: CategoriesApiService by lazy {
         retrofit.create(CategoriesApiService::class.java)
+    }
+
+    val accountApiService: AccountApiService by lazy {
+        retrofit.create(AccountApiService::class.java)
     }
 }

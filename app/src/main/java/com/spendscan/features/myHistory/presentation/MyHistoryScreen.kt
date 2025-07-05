@@ -1,6 +1,8 @@
 package com.spendscan.features.myHistory.presentation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize // <-- Добавлен импорт
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment // <-- Добавлен импорт
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -35,15 +38,15 @@ import com.spendscan.core.ui.components.TopBar
 import com.spendscan.core.network.ConnectivityObserver
 import java.time.Instant
 import java.time.ZoneId
+import com.spendscan.core.domain.managers.GlobalCurrentAccountManager // <-- ИМПОРТ МЕНЕДЖЕРА
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionListScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    userAccountId: Int = 1,
     isIncome: Boolean? = null,
-    title: String
+    title: String // <-- Если хотите использовать название из менеджера, это поле можно удалить
 ) {
     val context = LocalContext.current
 
@@ -52,28 +55,42 @@ fun TransactionListScreen(
     val repository: TransactionRepository = remember { TransactionRepositoryImpl(apiService) }
     val connectivityObserver = remember { ConnectivityObserver(context) }
 
+    // Собираем состояния из GlobalCurrentAccountManager
+    val isAccountLoading by GlobalCurrentAccountManager.instance.isAccountLoading.collectAsState()
+    val accountLoadError by GlobalCurrentAccountManager.instance.accountLoadError.collectAsState()
+    val currentAccountId by GlobalCurrentAccountManager.instance.currentAccountId.collectAsState()
+    val currentAccountName by GlobalCurrentAccountManager.instance.currentAccountName.collectAsState() // <-- Получаем название аккаунта
+
+    // ViewModel теперь инициализируется без accountId, который ViewModel будет брать из GlobalCurrentAccountManager
     val viewModel: MyHistoryViewModel = viewModel(
         factory = MyHistoryViewModelFactory(
             repository = repository,
-            accountId = userAccountId,
             isIncome = isIncome,
             connectivityObserver = connectivityObserver
         )
     )
 
     val transactions by viewModel.transactions.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val error by viewModel.error.collectAsState()
+    val isLoadingTransactions by viewModel.isLoading.collectAsState() // Переименовано для ясности
+    val errorTransactions by viewModel.error.collectAsState() // Переименовано для ясности
     val startDate by viewModel.startDate.collectAsState()
     val endDate by viewModel.endDate.collectAsState()
     val totalFormatted by viewModel.totalFormatted.collectAsState()
     val isOnline by viewModel.isOnline.collectAsState()
 
+    // Динамический заголовок
+    val screenTitle = remember(currentAccountName, title) {
+        // Если название аккаунта есть, используем его, иначе используем переданный title
+        currentAccountName?.let { name ->
+            if (name.isNotEmpty()) "$name - $title" else title // Можно настроить формат заголовка
+        } ?: title
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
             TopBar(
-                title = title,
+                title = screenTitle, // <-- Используем динамический заголовок
                 actionIcon = ImageVector.vectorResource(R.drawable.trailing_icon),
                 onActionClick = {/*TODO*/ },
                 backButton = ImageVector.vectorResource(R.drawable.back_icon),
@@ -82,6 +99,31 @@ fun TransactionListScreen(
         }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(top = innerPadding.calculateTopPadding())) {
+
+            // --- ОБРАБОТКА СОСТОЯНИЯ ЗАГРУЗКИ АККАУНТА ---
+            if (isAccountLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                    Text("Загрузка данных аккаунта...")
+                }
+                return@Column // Выходим, пока аккаунт загружается
+            }
+
+            if (accountLoadError != null) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Ошибка загрузки аккаунта: ${accountLoadError!!}", color = MaterialTheme.colorScheme.error)
+                }
+                return@Column // Выходим, если есть ошибка загрузки аккаунта
+            }
+
+            if (currentAccountId == null) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Ожидание ID аккаунта...")
+                }
+                return@Column // Выходим, если ID аккаунта еще не доступен
+            }
+
+            // Только если аккаунт успешно загружен и ID доступен, продолжаем отображение остального содержимого
 
             val currentStartDateMillis = remember(startDate) {
                 startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -119,7 +161,7 @@ fun TransactionListScreen(
             )
             HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
-            // --- КОММУНИКАЦИЯ С ПОЛЬЗОВАТЕЛЕМ О СОСТОЯНИИ СЕТИ И ОШИБКАХ ---
+            // --- КОММУНИКАЦИЯ С ПОЛЬЗОВАТЕЛЕМ О СОСТОЯНИИ СЕТИ И ОШИБКАХ ТРАНЗАКЦИЙ ---
             if (!isOnline) {
                 Text(
                     text = "Нет подключения к интернету. Проверьте соединение.",
@@ -129,16 +171,16 @@ fun TransactionListScreen(
                         .padding(8.dp),
                     textAlign = TextAlign.Center
                 )
-            } else if (error != null) {
+            } else if (errorTransactions != null) {
                 Text(
-                    text = "Ошибка загрузки: ${error}!",
+                    text = "Ошибка загрузки: ${errorTransactions}!",
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     textAlign = TextAlign.Center
                 )
-            } else if (isLoading) {
+            } else if (isLoadingTransactions) {
                 CircularProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth()
