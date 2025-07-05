@@ -1,11 +1,10 @@
-package com.spendscan.features.articles.presentation
+package com.spendscan.features.categories.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -23,20 +22,21 @@ import com.spendscan.core.ui.components.SearchTextField
 import com.spendscan.core.ui.components.TopBar
 import com.spendscan.core.ui.theme.SpendScanTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Alignment
 
 
 @Composable
-fun ArticleScreen(
+fun CategoryScreen( // Переименовано в CategoryScreen
     modifier: Modifier = Modifier,
-    viewModel: ArticleViewModel = viewModel()
+    viewModel: CategoryViewModel = viewModel() // Используем CategoryViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopBar("Мои статьи")
+            TopBar("Мои категории") // Изменен текст в TopBar
         }
     ) { innerPadding ->
         Column(
@@ -53,14 +53,13 @@ fun ArticleScreen(
                 onSearch = { query ->
                     viewModel.onSearchTextChange(query)
                 },
-                placeholder = "Найти статью"
+                placeholder = "Найти категорию" // Изменен плейсхолдер
             )
 
             HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
             when {
                 uiState.isLoading -> {
-                    // Если идет загрузка, показываем индикатор прогресса
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
@@ -68,13 +67,12 @@ fun ArticleScreen(
                     ) {
                         CircularProgressIndicator()
                         Text(
-                            text = "Загрузка статей...",
+                            text = "Загрузка категорий...", // Изменен текст
                             modifier = Modifier.padding(top = 16.dp)
                         )
                     }
                 }
                 uiState.error != null -> {
-                    // Если произошла ошибка, показываем сообщение об ошибке
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
@@ -87,42 +85,39 @@ fun ArticleScreen(
                         )
                     }
                 }
-                uiState.filteredArticles.isEmpty() && !uiState.isLoading && uiState.error == null && uiState.searchText.isNotBlank() -> {
-                    // Если список пуст после фильтрации и есть текст поиска
+                uiState.filteredCategories.isEmpty() && !uiState.isLoading && uiState.error == null && uiState.searchText.isNotBlank() -> {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Статьи по запросу '${uiState.searchText}' не найдены.",
+                            text = "Категории по запросу '${uiState.searchText}' не найдены.", // Изменен текст
                             modifier = Modifier.padding(16.dp)
                         )
                     }
                 }
-                uiState.filteredArticles.isEmpty() && !uiState.isLoading && uiState.error == null && uiState.searchText.isBlank() -> {
-                    // Если список пуст изначально (нет загруженных статей)
+                uiState.filteredCategories.isEmpty() && !uiState.isLoading && uiState.error == null && uiState.searchText.isBlank() -> {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Список статей пуст.",
+                            text = "Список категорий пуст.", // Изменен текст
                             modifier = Modifier.padding(16.dp)
                         )
                     }
                 }
                 else -> {
-                    // В остальных случаях (когда есть данные), отображаем список
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(uiState.filteredArticles) { article ->
+                        items(uiState.filteredCategories) { category -> // Используем filteredCategories и category
                             ListItem(
-                                onClick = { /*TODO: Обработка клика по статье*/ },
-                                leadingIconOrEmoji = article.emoji,
-                                primaryText = article.name,
+                                onClick = { /*TODO: Обработка клика по категории*/ },
+                                leadingIconOrEmoji = category.emoji, // Используем category.emoji
+                                primaryText = category.name, // Используем category.name
                                 secondaryText = null,
                                 trailingText = null,
                                 trailingIcon = null,
@@ -138,6 +133,6 @@ fun ArticleScreen(
 
 @Preview
 @Composable
-fun PreviewArticle() {
-    SpendScanTheme { ArticleScreen() }
+fun PreviewCategoryScreen() { // Изменено имя Preview
+    SpendScanTheme { CategoryScreen() } // Используем CategoryScreen
 }

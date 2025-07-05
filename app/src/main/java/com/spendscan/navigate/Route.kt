@@ -25,8 +25,8 @@ object Route {
         const val route = "account"
     }
 
-    object Article {
-        const val route = "article"
+    object Category {
+        const val route = "category"
     }
 
     object Settings {

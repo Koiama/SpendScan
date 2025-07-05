@@ -22,27 +22,4 @@ interface TransactionApiService {
         @Query("endDate") endDate: String?
     ): Response<List<TransactionDto>>
 
-    @GET("/accounts")
-    suspend fun getAccounts(
-    ): Response<List<Account>>
-
-    @GET("/accounts/{id}")
-    suspend fun getAccountById(
-        @Path("Id") Id: Int,
-    ): Response<List<TransactionDto>>
-
-    @GET("/accounts/{id}/history")
-    suspend fun getAccountHistoryById(
-        @Path("Id") Id: Int,
-    ): Response<List<AccountHistory>>
-
-    @GET("/categories")
-    suspend fun getCategories(
-    ): Response<List<CategoryDto>>
-
-    @GET("/categories/type/{isIncome}")
-    suspend fun getCategoriesByType(
-        @Path("isIncome") isIncome: Boolean
-    ): Response<List<CategoryDto>>
-
 }

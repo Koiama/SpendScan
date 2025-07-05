@@ -51,7 +51,7 @@ private fun getBottomNavItems(): List<BottomNavItem> {
             label = "Счет"
         ),
         BottomNavItem(
-            route = Route.Article.route,
+            route = Route.Category.route,
             icon = ImageVector.vectorResource(id = R.drawable.articles_icon),
             label = "Статьи"
         ),
