@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_data_icon_desc">Нет данных</string>
+    <string name="no_data_title_text">Нет операций</string>
+    <string name="no_data_content_text">За выбранный период операции отсутствуют</string>
+</resources>

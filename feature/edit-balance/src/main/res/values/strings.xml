@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_name_placeholder">Название счета</string>
+    <string name="balance_placeholder">Баланс</string>
+    <string name="choose_currency_placeholder">Выберите валюту</string>
+    <string name="account_name_default_name">Мой счет</string>
+    <string name="currency_label">Валюта</string>
+</resources>

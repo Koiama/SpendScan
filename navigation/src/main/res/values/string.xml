@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="expenses_label">Расходы</string>
+    <string name="expenses_title">Расходы сегодня</string>
+    <string name="income_label">Доходы</string>
+    <string name="income_title">Доходы сегодня</string>
+    <string name="balance_label">Счет</string>
+    <string name="balance_title">Мой счет</string>
+    <string name="categories_label">Статьи</string>
+    <string name="categories_title">Мои статьи</string>
+    <string name="settings_label">Настройки</string>
+    <string name="settings_title">Настройки</string>
+</resources>

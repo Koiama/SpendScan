@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="my_income_title">Мои доходы</string>
+    <string name="my_expenses_title">Мои расходы</string>
+    <string name="balance_name_label">Счет</string>
+    <string name="category_picker_label">Статья</string>
+    <string name="price_field_label">Сумма</string>
+    <string name="date_picker_label">Дата</string>
+    <string name="time_picker_label">Время</string>
+    <string name="description_field_label">Описание</string>
+</resources>
