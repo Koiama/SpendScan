@@ -30,4 +30,7 @@ android {
 dependencies {
     implementation(projects.core.common)
     implementation(libs.javax.inject)
+
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 }

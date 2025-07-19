@@ -14,6 +14,7 @@ class SpendScanApplication: Application(), CoreComponentProvider {
         super.onCreate()
 
         coreComponent = DaggerCoreComponent.factory()
-            .create(BuildConfig.API_KEY)
+            .create(applicationContext,
+                BuildConfig.API_KEY)
     }
 }

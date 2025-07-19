@@ -75,4 +75,9 @@ dependencies {
     kapt(libs.dagger.compiler.v2562)
     implementation(libs.androidx.core.splashscreen)
 
+    // Room
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }
