@@ -29,8 +29,6 @@ data object ExpensesFlow
 
 /**
  * Навигационный граф для экрана истории расходов
- *
- * @param navController контроллер навигации для управления переходами
  */
 fun NavGraphBuilder.expensesNavigationFlow(navController: NavHostController) {
     navigation<ExpensesFlow>(Expenses) {
@@ -106,9 +104,6 @@ data object Expenses : MainFlowScreen {
 data object ExpensesHistory : Screen {
     /**
      * Регистрация composable экрана истории расходов в графе навигации
-     *
-     * @param onLeadingIconClick обработчик клика по иконке "назад"
-     * @param onTrailingIconClick обработчик клика по дополнительной иконке
      */
     fun NavGraphBuilder.expensesHistoryScreen(
         onLeadingIconClick: () -> Unit,

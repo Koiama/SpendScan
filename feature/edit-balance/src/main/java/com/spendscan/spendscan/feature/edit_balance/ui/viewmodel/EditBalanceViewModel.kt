@@ -15,7 +15,7 @@ import com.spendscan.spendscan.core.common.utils.Result
 import com.spendscan.spendscan.core.common.utils.format.formatMoney
 import com.spendscan.spendscan.core.common.utils.onError
 import com.spendscan.spendscan.core.common.utils.onSuccess
-import com.spendscan.spendscan.core.common.utils.validator.toValidBalance
+import com.spendscan.spendscan.core.common.utils.format.toValidBalance
 import com.spendscan.spendscan.core.domain.models.account.AccountBrief
 import com.spendscan.spendscan.core.domain.models.account.AccountUpdateInfo
 import com.spendscan.spendscan.core.domain.usecase.GetAccountInfoUseCase

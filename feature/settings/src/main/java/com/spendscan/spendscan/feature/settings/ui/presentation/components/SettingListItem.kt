@@ -12,11 +12,6 @@ import com.spendscan.spendscan.feature.settings.domain.models.SettingType
 
 /**
  * Элемент списка настроек
- *
- * @param title название настройки
- * @param type тип элемента
- * @param onClick лямбда функция для обработки клика
- * @param modifier модификатор композиции
  */
 @Composable
 fun SettingListItem(

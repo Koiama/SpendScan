@@ -28,8 +28,6 @@ data object IncomeFLow
 
 /**
  * Навигационный граф для экрана истории доходов.
- *
- * @param navController контроллер навигации для управления переходами
  */
 fun NavGraphBuilder.incomeNavigationFlow(navController: NavHostController) {
     navigation<IncomeFLow>(Income) {
@@ -103,9 +101,6 @@ data object Income : MainFlowScreen {
 data object IncomeHistory : Screen {
     /**
      * Регистрация composable экрана истории доходов в графе навигации
-     *
-     * @param onLeadingIconClick обработчик клика по иконке "назад"
-     * @param onTrailingIconClick обработчик клика по дополнительной иконке
      */
     fun NavGraphBuilder.incomeHistoryScreen(
         onLeadingIconClick: () -> Unit,

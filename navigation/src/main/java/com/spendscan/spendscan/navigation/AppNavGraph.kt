@@ -12,9 +12,6 @@ import com.spendscan.spendscan.navigation.flows.mainNavigationFlow
 
 /**
  * Главный навигационный граф приложения
- *
- * @param modifier модификатор для настройки внешнего вида
- * @param navController контроллер навигации для управления переходами
  */
 @Composable
 fun AppNavGraph(

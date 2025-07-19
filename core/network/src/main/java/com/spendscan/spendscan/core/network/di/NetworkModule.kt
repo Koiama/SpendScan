@@ -6,7 +6,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.spendscan.spendscan.core.common.utils.qualifiers.AppScope
+import com.spendscan.spendscan.core.common.utils.AppScope
 import com.spendscan.spendscan.core.network.AuthInterceptor
 
 @Module

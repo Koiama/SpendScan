@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.spendscan.spendscan.core.common.utils.Result
 import com.spendscan.spendscan.core.common.utils.onSuccess
-import com.spendscan.spendscan.core.common.utils.validator.toValidBalance
+import com.spendscan.spendscan.core.common.utils.format.toValidBalance
 import com.spendscan.spendscan.core.domain.usecase.GetAccountInfoUseCase
 import com.spendscan.spendscan.feature.manage_transaction.domain.usecase.CreateTransactionUseCase
 import com.spendscan.spendscan.feature.manage_transaction.domain.usecase.DeleteTransactionUseCase
