@@ -2,6 +2,7 @@ package com.spendscan.spendscan.core.domain.repository
 
 import com.spendscan.spendscan.core.common.utils.Result
 import com.spendscan.spendscan.core.domain.models.transaction.Transaction
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -10,20 +11,11 @@ import java.time.LocalDateTime
  */
 interface TransactionRepository {
 
-    /**
-     * Получает список транзакций за указанный период для конкретного счёта
-     *
-     * @param startDate Начальная дата периода (включительно)
-     * @param endDate Конечная дата периода (включительно)
-     * @param accountId Идентификатор счёта
-     *
-     * @return [Result] с списком транзакций внутри в случае успеха
-     */
-    suspend fun getTransactions(
+    fun getTransactions(
         startDate: LocalDate,
         endDate: LocalDate,
         accountId: Long
-    ): Result<List<Transaction>>
+    ): Flow<List<Transaction>>
 
     suspend fun createTransaction(
         accountId: Long,
@@ -50,4 +42,6 @@ interface TransactionRepository {
     suspend fun getTransactionById(
         transactionId: Long
     ): Result<Transaction?>
+
+    suspend fun syncTransactions(): Result<Unit>
 }

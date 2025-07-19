@@ -36,5 +36,10 @@ dependencies {
     implementation(projects.core.common)
 
     implementation(libs.dagger)
+    implementation(libs.androidx.room.common.jvm)
+    implementation(libs.androidx.room.runtime.android)
     ksp(libs.dagger.compiler)
+
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 }
