@@ -25,8 +25,6 @@ data object BalanceNavigationFlow
 
 /**
  * Навигационный граф для экрана истории расходов
- *
- * @param navController контроллер навигации для управления переходами
  */
 fun NavGraphBuilder.balanceNavigationFlow(navController: NavHostController) {
     navigation<BalanceNavigationFlow>(Balance) {

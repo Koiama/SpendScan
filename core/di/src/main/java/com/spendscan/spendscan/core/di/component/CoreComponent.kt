@@ -2,7 +2,7 @@ package com.spendscan.spendscan.core.di.component
 
 import dagger.BindsInstance
 import dagger.Component
-import com.spendscan.spendscan.core.common.utils.qualifiers.AppScope
+import com.spendscan.spendscan.core.common.utils.AppScope
 import com.spendscan.spendscan.core.data.di.AccountModule
 import com.spendscan.spendscan.core.data.di.RepositoryModule
 import com.spendscan.spendscan.core.data.di.TransactionModule

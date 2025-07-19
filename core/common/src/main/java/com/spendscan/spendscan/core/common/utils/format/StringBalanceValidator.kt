@@ -1,4 +1,4 @@
-package com.spendscan.spendscan.core.common.utils.validator
+package com.spendscan.spendscan.core.common.utils.format
 
 fun String.toValidBalance(): String {
     val cleaned = this.replace(" ", "")

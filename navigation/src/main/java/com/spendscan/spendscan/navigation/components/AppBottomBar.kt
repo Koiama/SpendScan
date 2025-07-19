@@ -16,8 +16,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.spendscan.spendscan.navigation.flows.MainFlow
-import com.spendscan.spendscan.navigation.utils.Constants.SELECTED_NAV_BAR_ITEM_FONT_WEIGHT
-import com.spendscan.spendscan.navigation.utils.Constants.UNSELECTED_NAV_BAR_ITEM_FONT_WEIGHT
+import com.spendscan.spendscan.navigation.utils.Constants.SELECTED_FONT_WEIGHT
+import com.spendscan.spendscan.navigation.utils.Constants.UNSELECTED_FONT_WEIGHT
 
 /**
  * Компонент нижней навигационной панели приложения
@@ -62,8 +62,8 @@ fun AppBottomBar(
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight(
                                 if (isSelected) {
-                                    SELECTED_NAV_BAR_ITEM_FONT_WEIGHT
-                                } else UNSELECTED_NAV_BAR_ITEM_FONT_WEIGHT
+                                    SELECTED_FONT_WEIGHT
+                                } else UNSELECTED_FONT_WEIGHT
                             )
                         )
                     )
