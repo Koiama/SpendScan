@@ -30,6 +30,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:graphs"))
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
 

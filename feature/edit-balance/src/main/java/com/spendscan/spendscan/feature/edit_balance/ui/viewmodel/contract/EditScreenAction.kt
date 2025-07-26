@@ -8,4 +8,5 @@ sealed interface EditScreenAction{
     data class ChangeAccountName(val newName: String): EditScreenAction
     data class ChangeAccountCurrency(val newCurrency: Currency): EditScreenAction
     data object ChangeBottomSheetVisibility: EditScreenAction
+    object LoadTransactionsForLastMonth : EditScreenAction
 }
