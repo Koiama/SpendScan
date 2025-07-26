@@ -12,7 +12,6 @@ import com.spendscan.spendscan.core.domain.models.account.AccountBrief
 import com.spendscan.spendscan.core.domain.models.account.AccountUpdateInfo
 import com.spendscan.spendscan.core.domain.models.transaction.Transaction
 import com.spendscan.spendscan.core.domain.usecase.GetAccountInfoUseCase
-import com.spendscan.spendscan.feature.edit_balance.domain.usecase.GetTransactionsForLastMonthUseCase
 import com.spendscan.spendscan.feature.edit_balance.domain.usecase.UpdateAccountByIdUseCase
 import com.spendscan.spendscan.feature.edit_balance.ui.viewmodel.contract.EditScreenAction
 import com.spendscan.spendscan.feature.edit_balance.ui.viewmodel.contract.EditScreenUiEffect
@@ -29,8 +28,7 @@ import kotlinx.coroutines.withContext
 
 class EditBalanceViewModel @Inject constructor(
     private val getAccountInfoUseCase: GetAccountInfoUseCase,
-    private val updateAccountByIdUseCase: UpdateAccountByIdUseCase,
-    private val getTransactionsForLastMonthUseCase: GetTransactionsForLastMonthUseCase
+    private val updateAccountByIdUseCase: UpdateAccountByIdUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(EditScreenUiState())
     val uiState = _uiState.asStateFlow()
@@ -54,21 +52,7 @@ class EditBalanceViewModel @Inject constructor(
                 return@launch
             }
 
-            when (val result = getTransactionsForLastMonthUseCase(accountId = currentAccountId)) {
-                is Result.Success<List<Transaction>> -> {
-                    _uiState.update {
-                        it.copy(
-                            transactions = result.data
-                        )
-                    }
-                }
-                is Result.Error -> {
-                    _uiEffect.emit(EditScreenUiEffect.ShowError("Ошибка загрузки транзакций: ${result.message}"))
-                }
-                is Result.Exception -> {
-                    _uiEffect.emit(EditScreenUiEffect.ShowError("Исключение при загрузке транзакций: ${result.error.message ?: "Неизвестное исключение"}"))
-                }
-            }
+
         }
     }
 
@@ -145,18 +129,6 @@ class EditBalanceViewModel @Inject constructor(
         if (currentAccountId == 0L || (currentAccountId == 1L && _uiState.value.accountName == "Мой счет")) {
             _uiEffect.emit(EditScreenUiEffect.ShowError("ID счета недействителен для получения транзакций (внутренний вызов)"))
             return
-        }
-
-        when (val result = getTransactionsForLastMonthUseCase(accountId = currentAccountId)) {
-            is Result.Success<List<Transaction>> -> {
-                _uiState.update { it.copy(transactions = result.data) }
-            }
-            is Result.Error -> {
-                _uiEffect.emit(EditScreenUiEffect.ShowError("Ошибка загрузки транзакций: ${result.message}"))
-            }
-            is Result.Exception -> {
-                _uiEffect.emit(EditScreenUiEffect.ShowError("Исключение при загрузке транзакций: ${result.error.message ?: "Неизвестное исключение"}"))
-            }
         }
     }
 
