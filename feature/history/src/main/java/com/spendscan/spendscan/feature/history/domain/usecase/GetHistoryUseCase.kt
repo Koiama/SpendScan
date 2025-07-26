@@ -1,12 +1,14 @@
 package com.spendscan.spendscan.feature.history.domain.usecase
 
-import com.spendscan.spendscan.core.common.utils.Result
-import com.spendscan.spendscan.core.common.utils.map
+import com.spendscan.spendscan.core.common.utils.Result // Your Result wrapper
+// Remove: import com.spendscan.spendscan.core.common.utils.map // Not needed if using Flow.firstOrNull()
 import com.spendscan.spendscan.core.domain.models.account.Currency
 import com.spendscan.spendscan.core.domain.models.transaction.Transaction
 import com.spendscan.spendscan.core.domain.models.transaction.TransactionType
 import com.spendscan.spendscan.core.domain.repository.TransactionRepository
 import com.spendscan.spendscan.feature.history.domain.models.HistoryData
+import kotlinx.coroutines.flow.firstOrNull // Import for collecting a single value or null
+// kotlinx.coroutines.flow.map is NOT what we need here if we are collecting immediately
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -31,23 +33,33 @@ class GetHistoryUseCase @Inject constructor(
         accountId: Long,
         transactionType: TransactionType
     ): Result<HistoryData> {
-        return transactionRepository.getTransactions(
-            startDate = startDate,
-            endDate = endDate,
-            accountId = accountId
-        ).map { transactions ->
-            val filtered = when (transactionType) {
-                TransactionType.INCOME -> transactions.filter { it.category.isIncome }
-                TransactionType.EXPENSE -> transactions.filter { !it.category.isIncome }
+        return try {
+            val transactions = transactionRepository.getTransactions(
+                startDate = startDate,
+                endDate = endDate,
+                accountId = accountId
+            ).firstOrNull()
+
+            if (transactions == null) {
+                Result.Success(HistoryData(emptyList(), 0.0, Currency.RUB))
+            } else {
+                val filtered = when (transactionType) {
+                    TransactionType.INCOME -> transactions.filter { it.category.isIncome }
+                    TransactionType.EXPENSE -> transactions.filter { !it.category.isIncome }
+                }
+                val sorted: List<Transaction> = filtered.sortedByDescending { it.date }
+                val amount = calculateAmount(filtered, transactionType)
+                val currency = filtered.firstOrNull()?.account?.currency ?: Currency.RUB
+
+                val historyData = HistoryData(
+                    transactions = sorted,
+                    amount = amount,
+                    currency = currency
+                )
+                Result.Success(historyData)
             }
-            val sorted: List<Transaction> = filtered.sortedByDescending { it.date }
-            val amount = calculateAmount(filtered, transactionType)
-            val currency = filtered.firstOrNull()?.account?.currency ?: Currency.RUB
-            HistoryData(
-                transactions = sorted,
-                amount = amount,
-                currency = currency
-            )
+        } catch (e: Exception) {
+            Result.Error(4, "Не удалось получить историю транзакций")
         }
     }
 
@@ -55,12 +67,6 @@ class GetHistoryUseCase @Inject constructor(
         transactions: List<Transaction>,
         type: TransactionType
     ): Double {
-        return when (type) {
-            TransactionType.INCOME ->
-                transactions.sumOf { it.amount }
-
-            TransactionType.EXPENSE ->
-                transactions.sumOf { it.amount }
-        }
+        return transactions.sumOf { it.amount }
     }
 }
