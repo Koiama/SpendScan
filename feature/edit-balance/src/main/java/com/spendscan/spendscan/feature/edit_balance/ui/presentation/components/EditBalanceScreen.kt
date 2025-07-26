@@ -19,18 +19,17 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.Flow
+import com.spendscan.feature.edit_balance.R
 import com.spendscan.spendscan.core.ui.components.FinTrackerTextField
 import com.spendscan.spendscan.core.ui.components.ListItem
 import com.spendscan.spendscan.core.ui.components.Loading
-import com.spendscan.feature.edit_balance.R
 import com.spendscan.spendscan.feature.edit_balance.ui.viewmodel.contract.EditScreenAction
 import com.spendscan.spendscan.feature.edit_balance.ui.viewmodel.contract.EditScreenAction.ChangeAccountAmount
-import com.spendscan.spendscan.feature.edit_balance.ui.viewmodel.contract.EditScreenAction.ChangeAccountCurrency
 import com.spendscan.spendscan.feature.edit_balance.ui.viewmodel.contract.EditScreenAction.ChangeAccountName
 import com.spendscan.spendscan.feature.edit_balance.ui.viewmodel.contract.EditScreenAction.ChangeBottomSheetVisibility
 import com.spendscan.spendscan.feature.edit_balance.ui.viewmodel.contract.EditScreenUiEffect
 import com.spendscan.spendscan.feature.edit_balance.ui.viewmodel.contract.EditScreenUiState
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun EditBalanceScreen(
@@ -40,14 +39,15 @@ fun EditBalanceScreen(
     onAction: (EditScreenAction) -> Unit
 ) {
     val context = LocalContext.current
-    LaunchedEffect(Unit) {
+    LaunchedEffect(key1 = Unit) {
         uiEffect.collect { effect ->
             when (effect) {
-                is EditScreenUiEffect.ShowError -> Toast.makeText(
-                    context,
-                    effect.message,
-                    LENGTH_SHORT
-                ).show()
+                is EditScreenUiEffect.ShowError -> {
+                    Toast.makeText(context, effect.message, LENGTH_SHORT).show()
+                }
+                is EditScreenUiEffect.ShowSuccessMessage -> {
+                    Toast.makeText(context, effect.message, LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -94,13 +94,7 @@ fun EditBalanceScreen(
                         .height(56.dp)
                 )
                 HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outlineVariant)
-            }
-            if (uiState.isBottomSheetShown) {
-                FinTrackerBottomSheet(onDismiss = {
-                    onAction(ChangeBottomSheetVisibility)
-                }, onCurrencyClicked = {
-                    onAction(ChangeAccountCurrency(it))
-                })
+
             }
         }
     }

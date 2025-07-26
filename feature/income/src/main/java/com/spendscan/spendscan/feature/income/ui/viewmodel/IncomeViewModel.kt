@@ -78,7 +78,7 @@ class IncomeViewModel @Inject constructor(
                     )
                 }
             }.onException { error ->
-                var message = "Ошибка: Непредвиденная ошибка :("
+                var message = "Ошибка: Непредвиденная ошибка ="
                 if (error is UnknownHostException) {
                     message = "Ошибка подключения к сети"
                 }
