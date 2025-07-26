@@ -1,4 +1,4 @@
-package com.spendscan.spendscan.feature.edit_balance.domain.usecase
+package com.spendscan.spendscan.feature.balance.domain
 
 import com.spendscan.spendscan.core.common.utils.Result
 import com.spendscan.spendscan.core.domain.models.transaction.Transaction

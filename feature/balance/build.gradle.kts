@@ -30,6 +30,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:graphs"))
+    implementation(project(":feature:edit-balance"))
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
 

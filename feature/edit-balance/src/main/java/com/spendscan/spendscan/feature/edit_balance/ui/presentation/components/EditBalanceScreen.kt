@@ -54,13 +54,13 @@ fun EditBalanceScreen(
     onAction: (EditScreenAction) -> Unit
 ) {
     val context = LocalContext.current
-    LaunchedEffect(key1 = Unit) { // Используем Unit, если эффект должен собираться один раз при композиции
+    LaunchedEffect(key1 = Unit) {
         uiEffect.collect { effect ->
             when (effect) {
                 is EditScreenUiEffect.ShowError -> {
                     Toast.makeText(context, effect.message, LENGTH_SHORT).show()
                 }
-                is EditScreenUiEffect.ShowSuccessMessage -> { // <--- ДОБАВЛЕНО
+                is EditScreenUiEffect.ShowSuccessMessage -> {
                     Toast.makeText(context, effect.message, LENGTH_SHORT).show()
                 }
             }
@@ -110,75 +110,6 @@ fun EditBalanceScreen(
                 )
                 HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-                fun mapTransactionsToChartEntries(transactions: List<Transaction>): List<ExpensesGraphElement> {
-                    val formatter = DateTimeFormatter.ISO_DATE
-                    val grouped = transactions.groupBy { transaction: Transaction ->
-                        transaction.date.toLocalDate().format(formatter)
-                    }
-                    val today = LocalDate.now()
-
-                    val elements = (0 until 30).map { offset ->
-                        val date = today.minusDays((29 - offset).toLong())
-                        val key = date.format(formatter)
-
-                        val dailyTransactions = grouped[key].orEmpty()
-
-                        val expensesSum = dailyTransactions
-                            .filter { !it.category.isIncome }.sumOf { it.amount }
-
-                        val incomeSum = dailyTransactions
-                            .filter { it.category.isIncome }.sumOf { it.amount }
-
-                        val netAmount = expensesSum - incomeSum
-                        val isPositive = netAmount <= 0f // true если чистый доход или 0, false если чистый расход
-
-                        ExpensesGraphElement(
-                            date = date,
-                            amount = abs(netAmount).toFloat(),
-                            isPositive = isPositive
-                        )
-                    }
-                    return elements
-                }
-                // Отображаем секцию с графиком только если не идет общая загрузка
-                if (!uiState.isLoading) {
-                    // 1. Вычисляем элементы для графика.
-                    val graphElements = remember(uiState.transactions) {
-                        mapTransactionsToChartEntries(uiState.transactions)
-                    }
-
-                    // 2. Отображаем график или сообщение, если данных нет.
-                    if (uiState.transactions.isNotEmpty()) {
-                        ExpensesGraph(
-                            elements = graphElements,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .padding(top = 16.dp, bottom = 16.dp)
-                        )
-                    } else {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = "Нет транзакций")
-                        }
-                    }
-                } else {
-                    Box(modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth())
-                }
-            }
-            if (uiState.isBottomSheetShown) {
-                FinTrackerBottomSheet(onDismiss = {
-                    onAction(ChangeBottomSheetVisibility)
-                }, onCurrencyClicked = {
-                    onAction(ChangeAccountCurrency(it))
-                })
             }
         }
     }
