@@ -1,14 +1,12 @@
 package com.spendscan.spendscan.feature.history.domain.usecase
 
-import com.spendscan.spendscan.core.common.utils.Result // Your Result wrapper
-// Remove: import com.spendscan.spendscan.core.common.utils.map // Not needed if using Flow.firstOrNull()
+import com.spendscan.spendscan.core.common.utils.Result
 import com.spendscan.spendscan.core.domain.models.account.Currency
 import com.spendscan.spendscan.core.domain.models.transaction.Transaction
 import com.spendscan.spendscan.core.domain.models.transaction.TransactionType
 import com.spendscan.spendscan.core.domain.repository.TransactionRepository
 import com.spendscan.spendscan.feature.history.domain.models.HistoryData
-import kotlinx.coroutines.flow.firstOrNull // Import for collecting a single value or null
-// kotlinx.coroutines.flow.map is NOT what we need here if we are collecting immediately
+import kotlinx.coroutines.flow.firstOrNull
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -48,7 +46,7 @@ class GetHistoryUseCase @Inject constructor(
                     TransactionType.EXPENSE -> transactions.filter { !it.category.isIncome }
                 }
                 val sorted: List<Transaction> = filtered.sortedByDescending { it.date }
-                val amount = calculateAmount(filtered, transactionType)
+                val amount = calculateAmount(filtered)
                 val currency = filtered.firstOrNull()?.account?.currency ?: Currency.RUB
 
                 val historyData = HistoryData(
@@ -64,8 +62,7 @@ class GetHistoryUseCase @Inject constructor(
     }
 
     private fun calculateAmount(
-        transactions: List<Transaction>,
-        type: TransactionType
+        transactions: List<Transaction>
     ): Double {
         return transactions.sumOf { it.amount }
     }
